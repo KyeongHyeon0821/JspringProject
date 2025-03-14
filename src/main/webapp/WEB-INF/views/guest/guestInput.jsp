@@ -27,7 +27,7 @@
       </tr>
       <tr>
         <td>홈페이지</td>
-        <td><input type="text" name="homePage" id="homePage" placeholder="홈페이지(블로그)주소를 입력하세요" class="form-control"/></td>
+        <td><input type="text" name="homePage" id="homePage" value="https://" class="form-control"/></td>
       </tr>
       <tr>
         <td>글내용</td>

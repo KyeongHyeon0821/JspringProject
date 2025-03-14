@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.JspringProject.vo.UserVo;
 
-@Repository("UserDao")
+//@Repository("UserDao")
+@Repository
 public class UserDaoImpl implements UserDao {
 
 	@Autowired
@@ -48,5 +49,10 @@ public class UserDaoImpl implements UserDao {
 	public int setUserUpdate(UserVo vo) {
 		return sqlSession.update("userNS.setUserUpdate", vo);
 	}
+
+	public int getUserCnt() {
+		return sqlSession.selectOne("userNS.getUserCnt");
+	}
+
 	
 }

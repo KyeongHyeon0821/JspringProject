@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,7 +21,9 @@ public class User2Controller {
 	
 	// user 메인화면
 	@RequestMapping("/userMain")
-	public String userMainGet() {
+	public String userMainGet(Model model) {
+		int userCnt = userService.getUserCnt();
+		model.addAttribute("userCnt", userCnt);
 		return "user2/userMain";
 	}
 	
@@ -96,6 +99,15 @@ public class User2Controller {
 		
 		 if(res != 0)	return "redirect:/message/user2UpdateOk";
 		 else return "redirect:/message/user2UpdateNo";
+	}
+	
+	// 순서별 조회하기
+	@RequestMapping(value = "/userOrderList/{order}", method = RequestMethod.GET)
+	public String userOrderListGet(Model model, @PathVariable String order) {
+		List<UserVo> vos = userService.getUserOrderList(order);
+		model.addAttribute("vos", vos);
+		model.addAttribute("order", order);
+		return "user2/userList";
 	}
 	
 }

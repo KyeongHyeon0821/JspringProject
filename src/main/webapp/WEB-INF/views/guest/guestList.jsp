@@ -10,6 +10,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>guestList.jsp</title>
   <jsp:include page="/WEB-INF/views/include/bs5.jsp" />
+  <script>
+  	'use strict';
+  	
+  	function delCheck(idx) {
+  		let ans = confirm("정말 삭제하시겠습니까?");
+  		if(!ans) false;
+  		else location.href = "guestDelete?idx="+idx;
+  	}
+  </script>
   <style>
     th {
       text-align: center;
@@ -25,17 +34,36 @@
   <table class="table table-borderless m-0 p-0">
   	<tr>
   	  <td><a href="guestInput" class="btn btn-success btn-sm">글쓰기</a></td>
-  	  <td class="text-end"><a href="" class="btn btn-primary btn-sm">관리자</a></td>
+  	  
+  	  <td class="text-end">
+  	  	<c:if test="${sAdmin != 'adminOk'}"><a href="admin" class="btn btn-primary btn-sm">관리자</a></c:if>
+  	  	<c:if test="${sAdmin == 'adminOk'}"><a href="adminLogout" class="btn btn-primary btn-sm">관리자 로그아웃</a></c:if>
+  	  </td>
+  	</tr>
+  	<tr>
+  		<td colspan="2" class="text-end">
+  			<c:if test="${pag > 1}">
+  				<a href="guestList?pag=1" title="첫페이지" class="text-decoration-none">◁◁</a>
+  	      <a href="guestList?pag=${pag-1}" title="이전페이지" class="text-decoration-none">◀</a>
+  			</c:if>
+  			${pag} / ${totPage}
+  			<c:if test="${pag < totPage}">
+  				<a href="guestList?pag=${pag+1}" title="다음페이지" class="text-decoration-none">▶</a>
+  	      <a href="guestList?pag=${totPage}" title="마지막페이지" class="text-decoration-none">▷▷</a>
+  			</c:if> 
+  		</td>
   	</tr>
   </table>
   <c:forEach var="vo" items="${vos}" varStatus="st">
-	  <table class="table table-borderless mt-3 mb-0 p-0">
+	  <table class="table table-borderless m-0 p-0">
 			<tr>
-			  <td>글번호 : ${vo.idx}</td>
+			  <td>글번호 : ${vo.idx}
+			  	<c:if test="${sAdmin == 'adminOk'}"><a href="javascript:delCheck(${vo.idx})" class="btn btn-danger btn-sm">삭제</a></c:if>
+			  </td>
 			  <td class="text-end">방문IP : ${vo.hostIp}</td>
 			</tr>
 	  </table>
-  	<table class="table table-bordered border-secondary">
+  	<table class="table table-bordered border-secondary-subtle mb-5">
   		<tr>
   		  <th class="bg-secondary-subtle">글쓴이</th><td>${vo.name}</td>
   		  <th class="bg-secondary-subtle">방문일자</th><td>${fn:substring(vo.visitDate,0,19)}</td>
@@ -60,6 +88,20 @@
   		</tr>
   	</table>
   </c:forEach>
+  <br/>
+  <!-- 블록페이지 시작 -->
+  <div class="text-center">
+		<c:if test="${pag > 1}">[<a href="guestList?pag=1" class="text-decoration-none">처음</a>]</c:if>
+		<c:if test="${curBlock > 0}"><a href="guestList?pag=${(curBlock-1)*blockSize+1}" class="text-decoration-none">◁ 이전</a></c:if>
+		<c:forEach var="i" begin="${(curBlock*blockSize+1)}" end="${(curBlock*blockSize+blockSize)}" varStatus="st">
+			<c:if test="${i <= totPage && i == pag}"><a href="guestList?pag=${i}" class="text-decoration-none">[<font color="red"><b>${i}</b></font>]</a></c:if>
+  		<c:if test="${i <= totPage && i != pag}"><a href="guestList?pag=${i}" class="text-decoration-none">[${i}]</a></c:if>
+		</c:forEach>
+		<c:if test="${curBlock < lastBlock}"><a href="guestList?pag=${(curBlock+1)*blockSize+1}" class="text-decoration-none">다음 ▷</a></c:if>
+		<c:if test="${pag < totPage}">[<a href="guestList?pag=${totPage}" class="text-decoration-none">마지막</a>]</c:if>
+		  
+  </div>
+  <!-- 블록페이지 끝 -->
 </div>
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp" />

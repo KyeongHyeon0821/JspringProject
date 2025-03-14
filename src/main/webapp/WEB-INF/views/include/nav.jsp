@@ -14,7 +14,7 @@
       <div class="w3-dropdown-content w3-bar-block w3-card-4">
         <a href="${ctp}/user/userMain" class="w3-bar-item w3-button">SessionTempleat</a>
         <a href="${ctp}/user2/userMain" class="w3-bar-item w3-button">Mybatis 연습</a>
-        <a href="${ctp}/study/ajax/ajaxMain" class="w3-bar-item w3-button">Ajax연습</a>
+        <a href="${ctp}/study/ajax/ajaxForm" class="w3-bar-item w3-button">Ajax연습</a>
         <a href="#" class="w3-bar-item w3-button">연습</a>
       </div>
     </div>

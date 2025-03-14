@@ -20,4 +20,7 @@ public interface UserService {
 
 	int setUserUpdate(UserVo vo);
 
+	int getUserCnt();
+
+
 }

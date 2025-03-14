@@ -15,6 +15,11 @@
     	if(!ans) return false;
     	else location.href = "${ctp}/user2/userDeleteOk?idx="+idx;
     }
+    
+    function orderCheck() {
+    	let order = document.getElementById("order").value;
+    	location.href = "${ctp}/user2/userOrderList/"+order;
+    }
   </script>
 </head>
 <body>
@@ -23,6 +28,19 @@
 <p><br/></p>
 <div class="container">
   <h2>회원 전체 리스트</h2>
+  <table class="table table-borderless m-0">
+    <tr>
+      <td class="text-start"><a href="${ctp}/user2/userMain" class="btn btn-success btn-sm">돌아가기</a></td>
+      <td class="text-end">
+        <select name="order" id="order" onchange="orderCheck()">
+          <option value="idxDesc" ${order=='idxDesc' 	? 'selected' : ''}>최근가입순</option>
+          <option value="idx"  		${order=='idx' 			? 'selected' : ''}>가입순</option>
+          <option value="name" 		${order=='name' 		? 'selected' : ''}>성명순</option>
+          <option value="age"  		${order=='age' 			? 'selected' : ''}>나이순</option>
+        </select>
+      </td>
+    </tr>
+  </table>
   <table class="table table-hover text-center">
     <tr class="table-secondary">
       <th>번호</th>

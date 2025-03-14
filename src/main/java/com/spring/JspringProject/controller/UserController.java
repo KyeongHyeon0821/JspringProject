@@ -21,7 +21,9 @@ public class UserController {
 	
 	// user 메인화면
 	@RequestMapping("/userMain")
-	public String userMainGet() {
+	public String userMainGet(Model model) {
+		int userCnt = userService.getUserCnt();
+		model.addAttribute("userCnt", userCnt);
 		return "user/userMain";
 	}
 	
