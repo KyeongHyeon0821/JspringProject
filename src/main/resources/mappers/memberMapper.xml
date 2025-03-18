@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.JspringProject.dao.MemberDao">
+	
+	<select id="getMemberIdCheck" resultType="com.spring.JspringProject.vo.MemberVo">
+		select * from member where mid = #{mid};
+	</select>
+	
+	<select id="getMemberNickChcek" resultType="com.spring.JspringProject.vo.MemberVo">
+		select * from member where nickName = #{nickName};
+	</select>
+	
+	  
+	<select id="getMemberList" resultType="com.spring.JspringProject.vo.MemberVo">
+		<if test="level != 99">
+			select * from member where level = #{level} order by idx desc;
+		</if>
+		<if test="level == 99">
+			select * from member order by idx desc;
+		</if>
+	</select>  
+
+	<select id="getGuestPostCnt" resultType="int">
+		select count(*)from guest, member where member.name = #{name} and (guest.name = member.name or guest.name = member.nickName);
+	</select>
+	
+	
+	<insert id="setMemberJoinOk">
+		insert into member values (default,#{vo.mid},#{vo.pwd},#{vo.nickName},#{vo.name},#{vo.gender},#{vo.birthday},#{vo.tel},#{vo.address},#{vo.email},#{vo.job},#{vo.hobby},#{vo.photo},#{vo.content},#{vo.userInfor} ,default,default,default,default,default,default,default)
+	</insert>
+
+  
+  <update id="setMemberInforUpdate">
+  	update member set point = point + #{point}, visitCnt = visitCnt+1, todayCnt = todayCnt+1, lastDate = now() where mid=#{mid};
+  </update>
+  
+  <update id="setMemberDeleteCheck">
+  	update member set level = 999 where mid = #{mid};
+  </update>
+  
+  
+  
+</mapper>
