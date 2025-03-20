@@ -34,7 +34,8 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			projectProvide.writeFile(fName, sFileName, "member"); // 서버에 파일 올리기
 			
-			
+			// 기존 사진 파일을 삭제처리한다. (단, 기존 사진이 noimage.jpg라면 삭제하면 안됨)
+			if(!photo.equals("noimage.jpg")) projectProvide.deleteFile(photo, "member");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,6 +72,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int getGuestPostCnt(String name) {
 		return memberDao.getGuestPostCnt(name);
+	}
+
+	@Override
+	public MemberVo getMemberIdxSearch(int idx) {
+		return memberDao.getMemberIdxSearch(idx);
+	}
+
+	@Override
+	public int setMemberUpdateOk(MemberVo vo) {
+		return memberDao.setMemberUpdateOk(vo);
 	}
 
 }

@@ -4,4 +4,7 @@ public interface AdminService {
 
 	int getNewMemberCnt();
 
+	int setMemberLevelChange(int level, int idx);
+
+
 }

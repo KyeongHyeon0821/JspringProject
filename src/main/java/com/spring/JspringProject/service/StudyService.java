@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.JspringProject.vo.MemberVo;
+
 public interface StudyService {
 
 	String[] getCityStringArray(String dodo);
@@ -11,5 +13,6 @@ public interface StudyService {
 	List<String> getCityVosArray(String dodo);
 
 	int fileUpload(MultipartFile fName, String mid);
+
 
 }

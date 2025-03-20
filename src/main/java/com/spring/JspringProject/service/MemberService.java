@@ -24,6 +24,10 @@ public interface MemberService {
 
 	int getGuestPostCnt(String name);
 
+	MemberVo getMemberIdxSearch(int idx);
+
+	int setMemberUpdateOk(MemberVo vo);
+
 
 
 }

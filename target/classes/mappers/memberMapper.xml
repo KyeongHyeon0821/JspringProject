@@ -6,6 +6,15 @@
 		select * from member where mid = #{mid};
 	</select>
 	
+	
+	
+	<select id="getMemberIdxSearch" resultType="com.spring.JspringProject.vo.MemberVo">
+		select * from member where idx = #{idx};
+	</select>
+	
+	
+	
+	
 	<select id="getMemberNickChcek" resultType="com.spring.JspringProject.vo.MemberVo">
 		select * from member where nickName = #{nickName};
 	</select>
@@ -38,6 +47,8 @@
   	update member set level = 999 where mid = #{mid};
   </update>
   
-  
+	<update id="setMemberUpdateOk">
+		update member set nickName=#{vo.nickName},name=#{vo.name},gender=#{vo.gender},birthday=#{vo.birthday},tel=#{vo.tel},address=#{vo.address},email=#{vo.email},job=#{vo.job},hobby=#{vo.hobby},photo=#{vo.photo},content=#{vo.content},userInfor=#{vo.userInfor} where mid = #{vo.mid};
+	</update>  
   
 </mapper>

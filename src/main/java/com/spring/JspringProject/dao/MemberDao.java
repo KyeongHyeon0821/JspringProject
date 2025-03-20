@@ -24,4 +24,8 @@ public interface MemberDao {
 
 	int getGuestPostCnt(@Param("name") String name);
 
+	MemberVo getMemberIdxSearch(@Param("idx") int idx);
+
+	int setMemberUpdateOk(@Param("vo") MemberVo vo);
+
 }

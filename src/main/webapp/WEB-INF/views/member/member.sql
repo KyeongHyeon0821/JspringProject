@@ -6,14 +6,14 @@ create table member(
 	pwd 		 varchar(100) not null,					 		/* 회원 비밀번호(BCryptPasswordEncoder) */
 	nickName varchar(20) not null, 						 	/* 회원 별명(중복불허/수정가능)	*/
 	name 		 varchar(20) not null,						 	/* 회원 성명 */
-	gender   char(2) not null default '남자',		 	/* 회원 설별 */
+	gender   char(2) not null default '남자',		 	/* 회원 성별 */
 	birthday datetime default now(),				 		/* 회원 생일 */
 	tel 		 varchar(15),											 	/* 전화번호 : 010-1234-5678 */
 	address  varchar(100),								 			/* 회원 주소(다음 우편번호 API 사용) */
 	email		 varchar(60) not null,					 		/* 회원 이메일(회원가입시 인증 또는 '아이디/비밀번호' 분실시 사용 - 정규식 필수 체크 */
 	job			 varchar(20),												/* 직업(회원 통계시 필요) */
 	hobby		 varchar(100),											/* 취미(2개 이상 선택 가능, 구분자는 '/'로 처리하기로 한다. */
-	photo		 varchar(100) default 'noimage.jpg',/*회원 사진 */
+	photo		 varchar(100) default 'noimage.jpg',/* 회원 사진 */
 	content  text,															/* 회원 소개 */
 	userInfor char(3) default '공개',							/* 회원 정보 공개여부(공개/비공개) */
 	userDel	 char(2) default 'NO',							/* 회원 탈퇴 신청여부(NO:현재 활동중, OK:탈퇴신청중) */

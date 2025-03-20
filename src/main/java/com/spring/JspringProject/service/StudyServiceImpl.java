@@ -16,6 +16,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.JspringProject.dao.StudyDao;
+import com.spring.JspringProject.vo.MemberVo;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -166,7 +167,6 @@ public class StudyServiceImpl implements StudyService {
 		fos.close();
 	}
 
-	
 	
 	
 }

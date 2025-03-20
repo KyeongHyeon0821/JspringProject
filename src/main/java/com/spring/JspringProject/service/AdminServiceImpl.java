@@ -15,4 +15,9 @@ public class AdminServiceImpl implements AdminService {
 	public int getNewMemberCnt() {
 		return adminDao.getNewMemberCnt();
 	}
+
+	@Override
+	public int setMemberLevelChange(int level, int idx) {
+		return adminDao.setMemberLevelChange(level, idx);
+	}
 }

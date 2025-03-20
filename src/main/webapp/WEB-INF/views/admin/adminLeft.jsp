@@ -7,31 +7,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>adminLeft.jsp</title>
-	<jsp:include page="/WEB-INF/views/include/bs5.jsp"/>
+  <jsp:include page="/WEB-INF/views/include/bs5.jsp" />
+  <style>
+    a {text-decoration: none}
+    a:hover {
+      text-decoration: underline;
+      color: orange;
+    }
+  </style>
 </head>
 <body style="background-color:#eee">
-<p><br/></p>
 <div class="text-center">
-  <h5><a href="${ctp}/admin/adminContent" target="adminContent">관리자메뉴</a></h5>
-  <hr/>
-  <p><a href="${ctp}/" target="_top">홈으로</a></p>
-  <hr/>
-  <div>
-  	<button class="accordion"><b>게시글관리</b></button>
-  	<div class="panel">
-  		<p><a href="${ctp}/guest/guestList" target="adminContent">방명록리스트</a></p>
-  		<p><a href="">게시판리스트</a></p>
+  <div class="card m-1 p-1"><a href="${ctp}/admin/adminContent" target="adminContent">관리자메뉴</a></div>
+  <div class="card m-1 p-1"><a href="${ctp}/" target="_top">홈으로</a></div>
+  <div id="accordion">
+    <div class="card m-1">
+      <div class="card-header p-0"><a href="#one" class="btn" data-bs-toggle="collapse">게시글관리</a></div>
+	    <div id="one">
+	      <div class="card-body">
+		      <div><a href="${ctp}/guest/guestList" target="adminContent">방명록리스트</a></div>
+		      <div><a href="">게시판리스트</a></div>
+		      <div><a href="">자료실리스트</a></div>
+	      </div>
+	    </div>
   	</div>
   </div>
-  <hr/>
-  <div>
-  	<button class="accordion"><b>회원관리</b></button>
-  	<div class="panel">
-  		<p><a href="${ctp}/admin/member/memberList" target="adminContent">회원리스트</a></p>
-  		<p><a href="">신고리스트</a></p>
-  	</div>
+  <div id="accordion">
+    <div class="card m-1">
+    	<div class="card-header p-0"><a href="#two" class="btn" data-bs-toggle="collapse">회원관리</a></div>
+	    <div id="two">
+	    	<div class="card-body">
+		      <div><a href="${ctp}/admin/member/memberList" target="adminContent">회원리스트</a></div>
+		      <div><a href="">신고리스트</a></div>
+	      </div>
+	    </div>
+    </div>
   </div>
-  <hr/>
 </div>
 <p><br/></p>
 </body>

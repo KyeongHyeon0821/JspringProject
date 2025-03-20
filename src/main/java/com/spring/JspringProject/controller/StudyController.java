@@ -11,13 +11,16 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.service.StudyService;
 import com.spring.JspringProject.vo.MailVo;
+import com.spring.JspringProject.vo.MemberVo;
 
 //@RestController
 @Controller
@@ -26,6 +29,9 @@ public class StudyController {
 
 	@Autowired
 	private StudyService studyService;
+
+	@Autowired
+	private MemberService memberService;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -142,5 +148,17 @@ public class StudyController {
 		return "redirect:/message/mailSendOk";
 	}
 	
+	
+	@RequestMapping(value = ("/modal/modalForm"), method = RequestMethod.GET)
+	public String modalFormGet(Model model) {
+		model.addAttribute("name", "홍길동" );
+		model.addAttribute("age", "25" );
+		model.addAttribute("address", "서울" );
+		MemberVo vo = memberService.getMemberIdCheck("admin");
+		List<MemberVo> vos = memberService.getMemberList(99);
+		model.addAttribute("vo", vo);
+		model.addAttribute("vos", vos);
+		return "study/modal/modalForm";
+	}
 	
 }

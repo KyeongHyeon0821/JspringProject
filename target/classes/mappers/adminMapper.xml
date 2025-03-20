@@ -7,4 +7,11 @@
   	select count(*) from member where level = 3;
   </select>
   
+  
+  
+  
+  <update id="setMemberLevelChange">
+  	update member set level = #{level} where idx = #{idx};
+  </update>
+  
 </mapper>

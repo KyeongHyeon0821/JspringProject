@@ -28,6 +28,8 @@ import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.vo.MailVo;
 import com.spring.JspringProject.vo.MemberVo;
 
+import lombok.val;
+
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -111,7 +113,6 @@ public class MemberController {
 				return "redirect:/message/memberLoginOk?mid="+mid;
 		}
 		else {
-			System.out.println("로그인 실패");
 			return "redirect:/message/memberLoginNo";
 		}
 	}
@@ -216,6 +217,7 @@ public class MemberController {
 		mailSender.send(message);
 	}
 	
+	// 회원 메인창 폼
 	@RequestMapping(value = ("/memberMain"), method = RequestMethod.GET)
 	public String memberMainGet(HttpSession session, Model model) {
 		String mid = (String) session.getAttribute("sMid");
@@ -235,27 +237,66 @@ public class MemberController {
 	
 	// 회원탈퇴(정보수정) 신청을 위한 비밀번호 확인
 	@RequestMapping(value = ("/pwdCheck/{pwdFlag}"), method = RequestMethod.GET)
-	public String pwdCheckGet(Model model) {
+	public String pwdCheckGet(Model model, @PathVariable String pwdFlag) {
+		model.addAttribute("pwdFlag", pwdFlag);
 		return "member/pwdCheckForm";
 	}
 	
 	
-	  // 비밀번호 확인처리후 지정된 위치로 보내기처리
-	  
+	 // 비밀번호 확인처리후 지정된 위치로 보내기처리
 	 @RequestMapping(value = ("/pwdCheck/{pwdFlag}"), method = RequestMethod.POST)
 	 public String pwdCheckPost(HttpSession session, @PathVariable String pwdFlag, String pwd) {
 		 String mid = (String) session.getAttribute("sMid");
+		 // 비밀번호 확인후 비밀번호가 잘못되었을경우의 메세지 처리('d/p/u')
 		 if(!passwordEncoder.matches(pwd, memberService.getMemberIdCheck(mid).getPwd())) {
-			 return "redirect:/message/pwdCheckNo";
+			 if(pwdFlag.equals("d"))	return "redirect:/message/pwdCheckNo";
+			 else if(pwdFlag.equals("p"))	return "redirect:/message/pwdCheckNoP";
+			 else if(pwdFlag.equals("u"))	return "redirect:/message/pwdCheckNoU";
 		 }
 			 
+		 // 비밀번호가 맞으면 해당 항목 처리할수 있도록 보내준다.
 		 if(pwdFlag.equals("d")) {
 			 memberService.setMemberDeleteCheck(mid);
 			 return "redirect:/message/memberDeleteCheck";
 		 }
+		 else if(pwdFlag.equals("p")) return "redirect:/member/memberPassCheckForm";
+		 else if(pwdFlag.equals("u")) return "redirect:/member/memberUpdate";
 		 
 		 return "";
 	 }
 	 
+	 
+	 // 회원 정보 수정 폼 보기
+	 @RequestMapping(value = ("/memberUpdate"), method = RequestMethod.GET)
+	 public String memberUpdateGet(Model model, HttpSession session) {
+		 String mid = (String) session.getAttribute("sMid");
+		 MemberVo vo = memberService.getMemberIdCheck(mid);
+		 model.addAttribute("vo", vo);
+		 return "member/memberUpdate";
+	 }
+	 
+	 // 회원 정보 수정 처리
+	 @RequestMapping(value = ("/memberUpdate"), method = RequestMethod.POST)
+	 public String memberUpdatePost(HttpSession session, MemberVo vo, MultipartFile fName) {
+		 // 닉네임 체크(수정시에는 새로 세션에 저장처리한다.)
+		 String nickName = (String) session.getAttribute("sNickName");
+		 if(memberService.getMemberNickChcek(vo.getNickName()) != null && !nickName.equals(vo.getNickName())) {
+			 return "redirect:/message/nickCheckNo";
+		 }
+		 
+		 // 회원 사진 처리
+		 if(fName.getOriginalFilename() != null && !fName.getOriginalFilename().equals("")) {
+			 vo.setPhoto(memberService.fileUpload(fName, vo.getMid(), vo.getPhoto()));
+		 }
+		 
+		 
+		 int res = memberService.setMemberUpdateOk(vo);
+		 
+		 if(res !=0 ) {
+			 session.setAttribute("sNickName", vo.getNickName());
+			 return "redirect:/message/memberUpdateOk";
+		 }
+		 else return "redirect:/message/memberUpdateNo";
+	 }
 	
 }

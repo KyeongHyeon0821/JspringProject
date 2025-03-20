@@ -1,6 +1,6 @@
 package com.spring.JspringProject.common;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -27,6 +27,15 @@ public class ProjectProvide {
 		fos.flush();
 		fos.close();
 		
+	}
+	
+	// 파일 삭제처리
+	public void deleteFile(String photo, String urlPath) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/"+urlPath+"/");
+		
+		File file = new File(realPath + photo);
+		if(file.exists()) file.delete();
 	}
 	
 	
