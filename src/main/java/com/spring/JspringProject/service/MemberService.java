@@ -28,6 +28,8 @@ public interface MemberService {
 
 	int setMemberUpdateOk(MemberVo vo);
 
+	void setMemberTodayCntClear(String mid);
+
 
 
 }

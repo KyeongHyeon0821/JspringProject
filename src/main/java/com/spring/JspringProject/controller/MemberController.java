@@ -1,5 +1,6 @@
 package com.spring.JspringProject.controller;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -105,8 +106,13 @@ public class MemberController {
 						}
 					}
 				}
+				// 3-1. 기타처리 : 오늘 첫방문이면 todayCnt = 0
+				if(!LocalDateTime.now().toString().substring(0,10).equals(vo.getLastDate().substring(0,10))) {
+					memberService.setMemberTodayCntClear(mid);
+					vo.setTodayCnt(0);
+				}
 				
-				// 3. 기타처리 : 방문 카운트로 10 포인트 증정(단, 1일 50포인트까지만 제한)
+				// 3-2. 기타처리 : 방문 카운트로 10 포인트 증정(단, 1일 50포인트까지만 제한)
 				int point = vo.getTodayCnt()<5 ? 10 : 0;
 				memberService.setMemberInforUpdate(mid, point);
 				

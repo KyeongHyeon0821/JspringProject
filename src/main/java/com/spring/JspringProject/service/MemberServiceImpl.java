@@ -84,4 +84,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.setMemberUpdateOk(vo);
 	}
 
+	@Override
+	public void setMemberTodayCntClear(String mid) {
+		memberDao.setMemberTodayCntClear(mid);
+	}
+
 }

@@ -28,4 +28,6 @@ public interface MemberDao {
 
 	int setMemberUpdateOk(@Param("vo") MemberVo vo);
 
+	void setMemberTodayCntClear(@Param("mid") String mid);
+
 }
