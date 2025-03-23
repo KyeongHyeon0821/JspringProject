@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.JspringProject.dao.User2Dao">
+  
+  <select id="getUserIdSearch" resultType="userVo">
+<!--   <select id="getUserIdSearch" resultType="com.spring.JspringProject.vo.UserVo"> -->
+  	select * from user where mid = #{mid};
+  </select>
+  
+  <select id="getUserSearchPart" resultType="userVo">
+<!--   <select id="getUserSearchPart" resultType="com.spring.JspringProject.vo.UserVo"> -->
+  	select * from user where ${vo.part} = #{vo.content} limit 1;
+  </select>
+  
+  <select id="getUserList" resultType="userVo">
+<!--   <select id="getUserList" resultType="com.spring.JspringProject.vo.UserVo"> -->
+  	select * from user order by idx desc;
+  </select>
+  
+  <select id="getSearchIdx" resultType="userVo">
+  <!-- <select id="getSearchIdx" resultType="com.spring.JspringProject.vo.UserVo"> -->
+  	select * from user where idx = #{idx};
+  </select>
+  
+  <select id="getUserCnt">
+  	select count(*) from user;
+  </select>
+  
+  
+  <select id="getUserOrderList" resultType="userVo">
+    <if test='order =="idxDesc"'>
+    	select * from user order by idx desc;
+    </if>
+    <if test='order !="idxDesc"'>
+    	select * from user order by ${order};
+    </if>
+  </select>
+  
+<!--   <insert id="setUserInput">
+    insert into user values (default,#{vo.mid},#{vo.pwd},#{vo.name},#{vo.age},#{vo.gender},#{vo.address});
+  </insert> -->
+  
+  <insert id="setUserInput" parameterType="userVo">
+    insert into user values (default,#{mid},#{pwd},#{name},#{age},#{gender},#{address});
+  </insert>
+  
+  
+  
+  
+<!--   <update id="setUserUpdate">
+  	update user set pwd=#{vo.pwd},name=#{vo.name},age=#{vo.age},gender=#{vo.gender},address=#{vo.address} where idx=#{vo.idx};
+  </update> -->
+  <update id="setUserUpdate" parameterType="userVo">
+  	update user set pwd=#{pwd},name=#{name},age=#{age},gender=#{gender},address=#{address} where idx=#{idx};
+  </update>
+  
+  
+  
+  
+  
+  <delete id="setUserDeleteOk">
+    delete from user where idx = #{idx};
+  </delete>
+  
+</mapper>
