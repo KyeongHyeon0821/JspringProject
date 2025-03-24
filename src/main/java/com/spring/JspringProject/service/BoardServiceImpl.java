@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.JspringProject.dao.BoardDao;
+import com.spring.JspringProject.vo.BoardReplyVo;
 import com.spring.JspringProject.vo.BoardVo;
 
 @Service
@@ -32,8 +33,8 @@ public class BoardServiceImpl implements BoardService {
 
 	// 게시글 전체 조회
 	@Override
-	public List<BoardVo> getBoardList(int startIndexNo, int pageSize) {
-		List<BoardVo> vos = boardDao.getBoardList(startIndexNo, pageSize);
+	public List<BoardVo> getBoardList(int startIndexNo, int pageSize, String search, String searchString) {
+		List<BoardVo> vos = boardDao.getBoardList(startIndexNo, pageSize, search, searchString);
 		
 		// 오늘 날짜 년-월-일 구하기
 		Date date = new Date();
@@ -194,6 +195,31 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int setBoardUpdate(BoardVo vo) {
 		return boardDao.setBoardUpdate(vo);
+	}
+
+	@Override
+	public int setboardGoodCheck1(int idx) {
+		return boardDao.setboardGoodCheck1(idx);
+	}
+
+	@Override
+	public int setBoardGoodCheck2(int idx, int goodCnt) {
+		return boardDao.setBoardGoodCheck2(idx, goodCnt);
+	}
+
+	@Override
+	public BoardVo getPreNextSearch(int idx, String preNext) {
+		return boardDao.getPreNextSearch(idx, preNext);
+	}
+
+	@Override
+	public List<BoardReplyVo> getBoardReply(int idx) {
+		return boardDao.getBoardReply(idx);
+	}
+
+	@Override
+	public int setBoardReplyInput(BoardReplyVo vo) {
+		return boardDao.setBoardReplyInput(vo);
 	}
 	
 	

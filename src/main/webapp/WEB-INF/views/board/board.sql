@@ -23,3 +23,29 @@ insert into board values(default,'atom1234','에이톰맨','에이톰 다녀갑�
 
 select *,timestampdiff(hour, wDate, now()) AS hoursDiff from board;
 
+-- 이전글(preVo)
+select idx, title from board where idx < 7 order by idx desc limit 1;
+-- 다음글(nextVo)
+select idx, title from board where idx > 7 order by idx  limit 1;
+
+
+/* 댓글 달기 */
+create table boardReply (
+	idx int not null auto_increment,				/* 댓글 고유번호 */
+	boardIdx int not null,								/* 원본글의 고유번호 - 외래키로 지정 */
+	mid varchar(20) not null,							/* 댓글 작성자 아이디 */
+	nickName varchar(20) not null,				/* 댓글 작성자 닉네임 */
+	content text not null,								/* 댓글 내용 */
+	hostIp varchar(50) not null,					/* 댓글 올린 PC의 고유 IP */
+	wDate datetime default now(),					/* 댓글 올린 날짜/시간 */
+	primary key(idx),
+	foreign key(boardIdx) references board(idx) 
+	on update cascade
+	on delete cascade
+);
+
+desc boardReply;
+select * from board;
+insert into boardReply values(default , 56, 'admin', '관리자', '댓글연습중', '192.168.50.57', default);
+
+select * from boardReply;
