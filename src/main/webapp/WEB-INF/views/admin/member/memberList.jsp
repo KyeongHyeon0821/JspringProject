@@ -46,6 +46,62 @@
 				error : function() { alert("전송오류!");}
 			});
 		}
+		
+		// 회원 전체 체크/해제
+		function allCheckCheckBoxes() {
+			let isChecked = document.getElementById("allCheck").checked;
+			let checkboxes = document.getElementsByName("eachCheck");
+			
+			for(let i=0; i<checkboxes.length; i++) {
+				checkboxes[i].checked = isChecked;
+			}
+		}
+		
+		// 체크된 회원 레벨 변경
+		function CheckedMemberlevelChange() {
+			let checkedBoxes = document.querySelectorAll('input[name="eachCheck"]:checked');
+			let checkedIdxes = [];
+			
+			if (checkedBoxes.length == 0) {
+		        alert("회원을 선택해주세요.");
+		        return false;
+		    }
+			
+			
+			checkedBoxes.forEach(function(checkbox) {
+				checkedIdxes.push(checkbox.value);
+		  });
+			
+		  let idxes = checkedIdxes.join(",");
+			
+			let level = document.getElementById("levels").value;
+			
+			let ans = confirm("선택한 회원들의 등급을 변경하시겠습니까?");
+			if(!ans) {
+				location.reload();
+				return false;
+			}
+			
+			let query = {
+					level : level,
+					idxes : idxes
+			}
+			$.ajax({
+				url : "${ctp}/admin/checkedMemberLevelChange",
+				type : "post",
+				data : query,
+				success:function(res) {
+					if(res != "0") {
+						alert("등급 수정 완료!");
+						location.reload();
+					}
+					else alert("등급 수정 실패");
+				},
+				error : function() { alert("전송오류!");}
+			});
+			
+			
+		}
 	</script>
 	<style>
     a {text-decoration: none}
@@ -59,7 +115,18 @@
 <p><br/></p>
 <div class="container">
   <h2>전체 회원 리스트</h2>
-  <div class="row">
+  <div class="row mt-5">
+  	<div class="col text-start">
+  		체크된 회원 레벨 변경
+  		<select name="levels" id="levels" onchange="CheckedMemberlevelChange()">
+				<option value="">레벨선택</option>
+				<option value="1">우수회원</option>
+				<option value="2">정회원</option>
+				<option value="3">준회원</option>
+				<option value="0" >관리자</option>
+				<option value="999">탈퇴신청회원</option>
+			</select>
+  	</div>
   	<div class="col text-end mb-2">
   		<select name="levelItem" id="levelItem" onchange="levelItemCheck()">
   			<option value="99" ${level == 99 ? 'selected' : ''}>전체보기</option>
@@ -74,6 +141,7 @@
   <form name="myform">
   	<table class="table table-hover text-center border-secondary-subtle">
   		<tr class="table-secondary">
+  			<th><input type="checkbox" id="allCheck" onclick="allCheckCheckBoxes()" name="allCheck"/></th>
   			<th>번호</th>
   			<th>아이디</th>
   			<th>닉네임</th>
@@ -87,6 +155,7 @@
   		</tr>
   		<c:forEach var="vo" items="${vos}" varStatus="st">
   			<tr>
+  				<td><input type="checkbox" name="eachCheck" value="${vo.idx}"/></td>
   				<td>${vo.idx}</td>
   				<td><a href="${ctp}/admin/memberInfor/${vo.idx}" title="회원정보 상세보기">${vo.mid}</a></td>
   				<td>${vo.nickName}</td>

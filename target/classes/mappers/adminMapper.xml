@@ -7,11 +7,21 @@
   	select count(*) from member where level = 3;
   </select>
   
-  
+  <insert id="setBoardComplaintInput">
+  	insert into complaint values(default,#{vo.part},#{vo.partIdx},#{vo.cpMid},#{vo.cpContent} ,default);
+  </insert>
   
   
   <update id="setMemberLevelChange">
   	update member set level = #{level} where idx = #{idx};
   </update>
+  
+  
+  
+  <update id="setBoardTableComplaintOk">
+  	update board set complaint = 'OK' where idx = #{partIdx};
+  </update>
+  
+  
   
 </mapper>

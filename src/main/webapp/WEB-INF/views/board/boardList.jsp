@@ -67,6 +67,7 @@
 	  		<td class="text-start">
 	  			<a href="boardContent?pag=${pageVo.pag}&pageSize=${pageVo.pageSize}&idx=${vo.idx}&search=${pageVo.search}&searchString=${pageVo.searchString}">${vo.title}</a>
 	  			<c:if test="${vo.hoursDiff<24 }"><img src="${ctp}/images/new.gif" /></c:if>
+	  			<c:if test="${vo.replyCnt != 0}">(${vo.replyCnt})</c:if>
 	  		</td>
 	  		<td>${vo.nickName}</td>
 	  		<td>${vo.WDate}</td>

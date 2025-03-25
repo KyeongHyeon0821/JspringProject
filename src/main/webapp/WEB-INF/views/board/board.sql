@@ -27,7 +27,8 @@ select *,timestampdiff(hour, wDate, now()) AS hoursDiff from board;
 select idx, title from board where idx < 7 order by idx desc limit 1;
 -- 다음글(nextVo)
 select idx, title from board where idx > 7 order by idx  limit 1;
-
+-- 댓글의 개수를 원본글과 함께 출력
+select *, (select count(idx) from boardReply where boardIdx = b.idx) as replyCnt from board b;
 
 /* 댓글 달기 */
 create table boardReply (

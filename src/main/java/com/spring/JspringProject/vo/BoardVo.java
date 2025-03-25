@@ -19,5 +19,8 @@ public class BoardVo {
 	private String wDate;
 	private String good;
 	private String complaint;
+	
 	private int hoursDiff;
+	
+	private int replyCnt; // 댓글의 갯수를 저장하는 변수
 }

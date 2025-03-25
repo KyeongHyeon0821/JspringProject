@@ -54,12 +54,29 @@ public class AdminController {
 		return "admin/member/memberList";
 	}
 	
-	// 선택된 회원 레벨 등급 변경처리
+	// 개별 회원 레벨 등급 변경처리
 	@ResponseBody
 	@RequestMapping(value = ("/memberLevelChange"), method = RequestMethod.POST)
 	public String memberLevelChangePost(int level, int idx) {
 		return adminService.setMemberLevelChange(level, idx) + "";
 	}
+	
+	// 선택된 회원 레벨 등급 변경처리
+	@ResponseBody
+	@RequestMapping(value = ("/checkedMemberLevelChange"), method = RequestMethod.POST)
+	public String checkedMemberLevelChange(int level, String idxes) {
+		System.out.println("level : " + level);
+		System.out.println("idxes : " + idxes);
+		int res = 0;
+		
+		String[] idxArray = idxes.split(",");
+		for(String idxStr : idxArray) {
+			res = adminService.setMemberLevelChange(level, Integer.parseInt(idxStr));
+		}
+		
+		return res+"";
+	}
+	
 	
 	// 개별 회원정보 상세보기
 	@RequestMapping(value = ("/memberInfor/{idx}"), method = RequestMethod.GET)

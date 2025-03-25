@@ -221,6 +221,16 @@ public class BoardServiceImpl implements BoardService {
 	public int setBoardReplyInput(BoardReplyVo vo) {
 		return boardDao.setBoardReplyInput(vo);
 	}
+
+	@Override
+	public int setBoardReplyDelete(int idx) {
+		return boardDao.setBoardReplyDelete(idx);
+	}
+
+	@Override
+	public int setReplyUpdateCheckOk(BoardReplyVo vo) {
+		return boardDao.setReplyUpdateCheckOk(vo);
+	}
 	
 	
 	

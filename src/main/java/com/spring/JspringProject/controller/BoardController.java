@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.JspringProject.common.Pagination;
+import com.spring.JspringProject.service.AdminService;
 import com.spring.JspringProject.service.BoardService;
 import com.spring.JspringProject.vo.BoardReplyVo;
 import com.spring.JspringProject.vo.BoardVo;
+import com.spring.JspringProject.vo.ComplaintVo;
 import com.spring.JspringProject.vo.PageVo;
 
 @Controller
@@ -30,6 +32,9 @@ public class BoardController {
 	
 	@Autowired
 	Pagination pagination;
+	
+	@Autowired
+	AdminService adminService;
 	
 	// 게시판 리스트 보기
 	@RequestMapping(value = ("/boardList"), method = RequestMethod.GET)
@@ -187,7 +192,7 @@ public class BoardController {
 		else return "redirect:/message/boardUpdateNo?idx="+vo.getIdx();
 	}
 	
-	
+	// 좋아요
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping(value = ("/boardGoodCheck1"), method = RequestMethod.POST)
@@ -208,19 +213,72 @@ public class BoardController {
 		return res;
 	}
 	
-	
+	// 좋아요/싫어요 중복배제처리
+	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value = ("/boardGoodCheck2"), method = RequestMethod.POST)
-	public String boardGoodCheck2Post(HttpSession session ,int idx, int goodCnt) {
-		//return boardService.setboardGoodCheck1(idx)+"";
-		return boardService.setBoardGoodCheck2(idx, goodCnt) + "";
+	@RequestMapping(value = "/boardGoodCheck2", method = RequestMethod.POST)
+	public String boardGoodCheck2Post(HttpSession session, int idx, int goodCnt) {
+		String res = "0";
+		String imsiNum = "";
+
+		List<String> goodNum = (List<String>) session.getAttribute("sDuplicate");
+		if(goodNum == null) goodNum = new ArrayList<String>();
+		if(goodCnt == 1) {
+			imsiNum = "boardGood" + idx;
+			if(!goodNum.contains(imsiNum)) {
+				boardService.setBoardGoodCheck2(idx, goodCnt);
+				goodNum.add(imsiNum);
+			}
+			else res = "1";
+		}
+		else {
+			imsiNum = "boardHate" + idx;
+			if(!goodNum.contains(imsiNum)) {
+				boardService.setBoardGoodCheck2(idx, goodCnt);
+				goodNum.add(imsiNum);
+			}
+			else res = "-1";
+		}
+		session.setAttribute("sDuplicate", goodNum);
+		
+		return res;
 	}
 	
+	// 댓글 입력 처리
 	@ResponseBody
 	@RequestMapping(value = ("/boardReplyInput"), method = RequestMethod.POST)
 	public String boardReplyInputPost(BoardReplyVo vo) {
 		return boardService.setBoardReplyInput(vo) + "";
 	}
+	
+	// 댓글 삭제 처리
+	@ResponseBody
+	@RequestMapping(value = ("/boardReplyDelete"), method = RequestMethod.POST)
+	public String boardReplyDeletePost(int idx) {
+		return boardService.setBoardReplyDelete(idx) + "";
+	}
+	
+	
+	// 댓글 수정 처리
+	@ResponseBody
+	@RequestMapping(value = ("/boardReplyUpdateCheckOk"), method = RequestMethod.POST)
+	public String replyUpdateCheckOkePost(BoardReplyVo vo) {
+		return boardService.setReplyUpdateCheckOk(vo) + "";
+	}
+	
+	
+	// 게시글 신고 처리
+	@ResponseBody
+	@RequestMapping(value = ("/boardComplaintInput"), method = RequestMethod.POST)
+	public String boardComplaintInputPost(ComplaintVo vo) {
+		int res = 0;
+		res = adminService.setBoardComplaintInput(vo);
+		if(res != 0) adminService.setBoardTableComplaintOk(vo.getPartIdx());
+		return res + "";
+	}
+	
+	
+	
 	
 	
 }

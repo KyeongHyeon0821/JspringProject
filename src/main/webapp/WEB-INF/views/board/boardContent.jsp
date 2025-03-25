@@ -19,6 +19,11 @@
   </style>
 	<script>
 		'use strict';
+		
+		$(function (){
+			$(".replyUpdateForm").hide();
+		});
+		
 		function delCheck() {
 	    	let ans = confirm("현재 게시글을 삭제 하시겠습니다.?");
 	    	if(ans) location.href = "boardDelete?idx=${vo.idx}";
@@ -38,22 +43,25 @@
 			});
 		}
 		
-		// 좋아요/싫어요
-		function goodCheck2(goodCnt) {
-			$.ajax({
-				url : "${ctp}/board/boardGoodCheck2",
-				type : "post",
-				data : {
-					idx : ${vo.idx},
-					goodCnt : goodCnt
-				},
-				success : function(res) {
-					if(res != "0") location.reload();
-					else alert("이미 좋아요를 눌렀습니다.");
-				},
-				error : function() { alert("전송오류!"); }
-			});
-		}
+		// '좋아요/싫어요' : 중복불허
+    function goodCheck2(goodCnt) {
+    	$.ajax({
+    		url  : "${ctp}/board/boardGoodCheck2",
+    		type : "post",
+    		data : {
+    			idx : ${vo.idx},
+    			goodCnt : goodCnt
+    		},
+    		success:function(res) {
+    			if(res == "0") location.reload();
+    			else {
+    				if(res == "1") alert("이미 좋아요를 눌렀습니다.");
+    				else alert("이미 싫어요를 눌렀습니다.");
+    			}
+    		},
+    		error : function() { alert("전송오류!"); }
+    	});
+    }
 		
 		// 댓글 달기
 		function replyCheck() {
@@ -82,6 +90,109 @@
 					}
 					else alert("댓글 입력 실패");
 				}
+			});
+		}
+		
+		
+		// 댓글 삭제
+		function replyDeleteCheck(idx) {
+			let ans = confirm("댓글을 삭제하시겠습니까?");
+			if(!ans) return false;
+			
+			$.ajax({
+				url : "boardReplyDelete",
+				type : "post",
+				data : { 
+					idx : idx, 
+				},
+				success: function(res) {
+					if(res != "0") {
+						alert("댓글이 삭제되었습니다.");
+						location.reload();
+					}
+					else alert("삭제 실패!");
+				},
+				error : function() { alert("전송오류!"); }
+			});
+		}
+		
+		// 댓글 수정폼 보여주기
+		function replyUpdateCheck(idx) {
+			$(".replyUpdateForm").hide();
+			$("#replyUpdateForm"+idx).show();
+		}
+		
+		// 댓글 수정폼 닫기
+		function replyUpdateViewClose(idx) {
+			$("#replyUpdateForm"+idx).hide();
+		}
+		
+		// 댓글 수정 처리
+		function replyUpdateCheckOk(idx) {
+			let content = $("#content"+idx).val();
+			if(content.trim() == "") {
+				alert("수정할 댓글을 입력하세요.");
+				return false;
+			}
+			let query = {
+					idx : idx,
+					content : content,
+					hostIp : '${pageContext.request.remoteAddr}'
+			}
+			
+			$.ajax({
+				url : "boardReplyUpdateCheckOk",
+				type : "post",
+				data : query,
+				success : function(res) {
+					if(res != "0") {
+						alert("댓글이 수정되었습니다.");
+						location.reload();
+					}
+					else alert("수정 실패!");
+				},
+				error : function() { alert("전송오류!"); }
+			});
+		}
+		
+		// 모달의 기타 내용 입력창 보여주기
+		function etcShow() {
+			$("#claimTxt").show();
+		}
+		
+		// 모달 창에서 신고항목 선택 후 '확인'버튼 클릭 시 수행 처리
+		function claimCheck() {
+			if(!$("input[type=radio][name=claim]:checked").is(':checked')) {
+    		alert("신고항목을 선택하세요");
+    		return false;
+	    }
+	    if($("input[type=radio]:checked").val() == '기타' && $("#claimTxt").val() == '') {
+    		alert("기타 사유를 입력해 주세요");
+    		return false;
+    	}
+		
+			let claimContent = modalForm.claim.value;
+			if(claimContent == '기타') claimContent += '/' + $("#claimTxt").val();
+		
+			let query = {
+				part : 'board',
+				partIdx : ${vo.idx},
+				cpMid : '${sMid}',
+				cpContent : claimContent
+			}
+			
+			$.ajax({
+				url : "boardComplaintInput",
+				type : "post",
+				data : query,
+				success : function(res) {
+					if(res != "0") {
+						alert("게시글이 신고되었습니다.");
+						location.reload();
+					}
+					else alert("신고 실패!");
+				},
+				error : function() { alert("전송오류!"); }
 			});
 		}
 	</script>
@@ -120,6 +231,10 @@
   </table>
   <div class="row">
   	<div class="col"><input type="button" value="돌아가기" onclick="location.href='boardList?pag=${pag}&pageSize=${pageSize}&search=${search}&searchString=${searchString}'" class="btn btn-info" /></div>
+  	<div class="col">
+  		<c:if test="${sMid != vo.mid && vo.complaint == 'NO'}"><a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-danger">신고하기</a></c:if>
+  		<c:if test="${vo.complaint == 'OK'}"><font color="red">현재 게시글은 신고된 글입니다.</font></c:if>
+  	</div>
   	<c:if test="${sNickName == vo.nickName || sLevel == 0}">
 	  	<div class="col text-end">
 	  		<c:if test="${sNickName == vo.nickName}">
@@ -154,10 +269,41 @@
   	</tr>
   	<c:forEach var="replyVo" items="${replyVos}" varStatus="st">
   		<tr>
-  			<td>${replyVo.nickName}</td>
+  			<td>${replyVo.nickName}
+  				<c:if test="${sMid == replyVo.mid || sLevel == 0}">
+  				 	(<a href="javascript:replyDeleteCheck(${replyVo.idx})" title="댓글삭제">x</a>)
+  				 	<c:if test="${sMid == replyVo.mid}">
+  					 	(<a href="javascript:replyUpdateCheck(${replyVo.idx})" title="댓글수정">√</a>)
+  					 </c:if>
+  				 </c:if>
+  			</td>
   			<td>${fn:replace(replyVo.content, newLine, "<br/>")}</td>
   			<td>${fn:substring(replyVo.WDate, 0, 10)}</td>
   			<td>${replyVo.hostIp}</td>
+  		</tr>
+  		<!-- 댓글 수정 폼 -->
+  		<tr>
+  			<td colspan="4">
+  				<div id="replyUpdateForm${replyVo.idx}" class="replyUpdateForm">
+					  <form name="replyUpdateForm">
+					  	<table class="table table-center table-bordered">
+					  		<tr>
+					  			<td class="text-start" style="width:85%">
+					  				글내용 :
+					  				<textarea rows="4" name="content" id="content${replyVo.idx}" class="form-control">${replyVo.content}</textarea>
+					  			</td>
+					  			<td style="width:15%">
+					  				<p>작성자 : ${sNickName}</p>
+					  				<p>
+					  					<a href="javascript:replyUpdateCheckOk(${replyVo.idx})" class="badge bg-primary btn-sm">댓글수정</a>
+					  					<a href="javascript:replyUpdateViewClose(${replyVo.idx})" class="badge bg-warning btn-sm">창닫기</a>
+					  				</p>
+					  			</td>
+					  		</tr>
+					  	</table>
+					  </form>
+				  </div>
+  			</td>
   		</tr>
   	</c:forEach>
   </table>
@@ -167,19 +313,48 @@
   <form name="replyForm">
   	<table class="table table-center table-bordered">
   		<tr>
-  			<td class="text-start">
+  			<td class="text-start" style="width:85%">
   				글내용 :
   				<textarea rows="4" name="content" id="content" class="form-control"></textarea>
   			</td>
-  			<td>
+  			<td style="width:15%">
   				<p>작성자 : ${sNickName}</p>
   				<p><input type="button" value="댓글달기" onclick="replyCheck()" class="btn btn-info btn-sm" /></p>
   			</td>
   		</tr>
-  	
   	</table>
   </form>
 </div>
+
+<!-- The Modal -->
+	<div class="modal fade" id="myModal">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">현재 게시글을 신고합니다.</h4>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<h5>신고 사유 선택</h5>
+	      	<form name="modalForm">
+		        <div><input type="radio" name="claim" id="claim1" value="광고,홍보,영리목적"/> 광고,홍보,영리목적</div>
+	          <div><input type="radio" name="claim" id="claim2" value="욕설,비방,차별,혐오"/> 설,비방,차별,혐오</div>
+	          <div><input type="radio" name="claim" id="claim3" value="불법정보"/> 불법정보</div>
+	          <div><input type="radio" name="claim" id="claim4" value="음란,청소년유해"/> 음란,청소년유해</div>
+	          <div><input type="radio" name="claim" id="claim5" value="개인정보노출,유포,거래"/> 개인정보노출,유포,거래</div>
+	          <div><input type="radio" name="claim" id="claim6" value="도배,스팸"/> 도배,스팸</div>
+	          <div><input type="radio" name="claim" id="claim7" value="기타" onclick="etcShow()"/> 기타</div>
+	          <div id="etc"><textarea rows="2" id="claimTxt" class="form-control" style="display:none"></textarea></div>
+	          <hr class="border">
+	          <input type="button" value="확인" onclick="claimCheck()" class="btn btn-success form-control" />
+          </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 </body>
