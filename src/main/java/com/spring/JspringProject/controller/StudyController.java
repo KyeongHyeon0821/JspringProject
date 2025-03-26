@@ -1,5 +1,6 @@
 package com.spring.JspringProject.controller;
 
+import java.io.File;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -87,8 +88,10 @@ public class StudyController {
 	
 	// 파일 업로드 폼 보기
 	@RequestMapping(value = ("/fileUpload/fileUpload"), method = RequestMethod.GET )
-	public String fileUploadGet(HttpServletRequest request) {
-		//String realPath = request.getSession().getServletContext().getRealPath("/resources/data/fileUpload");
+	public String fileUploadGet(HttpServletRequest request, Model model) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/fileUpload");
+		String[] files = new File(realPath).list();
+		model.addAttribute("files", files);
 		
 		return "study/fileUpload/fileUpload";
 	}
@@ -100,6 +103,43 @@ public class StudyController {
 		
 		if(res != 0) return "redirect:/message/fileUploadOk";
 		else return "redirect:/message/fileUploadNo";
+	}
+	
+	// 선택된 파일 1개 삭제 처리
+	@ResponseBody
+	@RequestMapping(value = ("/fileUpload/fileDelete"), method = RequestMethod.POST )
+	public String fileDeletePost(HttpServletRequest request, String file) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/fileUpload/");
+		String res = "0";
+		File fName = new File(realPath + file);
+		
+		if(fName.exists()) {
+			fName.delete();
+			res = "1";
+		}
+		
+		return res;
+	}
+	
+	// 모든 파일 삭제 처리
+	@ResponseBody
+	@RequestMapping(value = ("/fileUpload/fileDeleteAll"), method = RequestMethod.POST )
+	public String fileDeleteAllPost(HttpServletRequest request) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/fileUpload/");
+		String res = "0";
+		File folder = new File(realPath);
+		if(!folder.exists()) return res;
+		
+		File[] files = folder.listFiles();
+		
+		if(files.length != 0) {
+			for(File file : files) {
+				file.delete();
+			}
+			res = "1";
+		}
+		
+		return res;
 	}
 	
 	// 메일 연습 폼 보기

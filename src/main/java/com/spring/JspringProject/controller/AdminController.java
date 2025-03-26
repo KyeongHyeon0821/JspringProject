@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.JspringProject.service.AdminService;
+import com.spring.JspringProject.service.BoardService;
 import com.spring.JspringProject.service.MemberService;
+import com.spring.JspringProject.vo.BoardVo;
+import com.spring.JspringProject.vo.ComplaintVo;
 import com.spring.JspringProject.vo.MemberVo;
 
 @Controller
@@ -25,6 +28,9 @@ public class AdminController {
 
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	BoardService boardService;
 	
 	@GetMapping("/adminMain")
 	public String adminMainGet() {
@@ -84,6 +90,52 @@ public class AdminController {
 		MemberVo vo = memberService.getMemberIdxSearch(idx);
 		model.addAttribute("vo", vo);
 		return "admin/member/memberInfor";
+	}
+	
+	// 신고 리스트 보기
+	@RequestMapping(value = ("/complaint/complaintList"), method = RequestMethod.GET)
+	public String complaintListGet(Model model) {
+		List<ComplaintVo> vos = adminService.getComplaintList();
+		model.addAttribute("vos", vos);
+		return "admin/complaint/complaintList";
+	}
+	
+	// 신고 게시글 상세보기
+	@RequestMapping(value = ("/boardInfor/{idx}"), method = RequestMethod.GET)
+	public String boardInforGet(Model model, @PathVariable int idx) {
+		BoardVo vo = boardService.getBoardContent(idx);
+		model.addAttribute("vo", vo);
+		return "admin/complaint/boardInfor";
+	}
+	
+	
+	
+	// 신고글 감추기/보이기
+	@ResponseBody
+	@RequestMapping(value = ("/complaint/contentChange"), method = RequestMethod.POST)
+	public String contentChangePost(int contentIdx, String contentSw) {
+		String res = "";
+		// 컨텐츠 감추기/보이기 처리
+		res = adminService.setContentChange(contentIdx, contentSw) + "";
+		// 컨첸츠 보이기 처리를 했다면 신고 테이블에서 해당 컨텐츠를 삭제
+		if(res.equals("1") && contentSw.equals("S")) {
+			res = adminService.setComplaintDeleteContent(contentIdx) + "";
+		}
+		
+		return res;
+	}
+	
+	// 신고글 삭제하기
+	@ResponseBody
+	@RequestMapping(value = ("/complaint/contentDelete"), method = RequestMethod.POST)
+	public String contentDeletePost(int contentIdx, String contentName) {
+		String res = "";
+		// 게시글을 삭제하려면 complaint table에서 먼저 해당 게시글에 대한 신고를 삭제 해야함 (외래키로 잡고있기 때문)
+		res = adminService.setComplaintDeleteContent(contentIdx) + "";
+		if(res.equals("1") && contentName.equals("B"))	res = boardService.setBoardDelete(contentIdx) + "";
+		//else if(res.equals("1") && contentName.equals("P")) return pdsService.setPdsDelete(contentIdx) + "";
+		
+		return res;
 	}
 	
 	

@@ -6,8 +6,13 @@ import lombok.Data;
 public class ComplaintVo {
 	private int idx;
 	private String part;
-	private int partIdx;
+	private int boardIdx;
+	private int pdsIdx;
 	private String cpMid;
 	private String cpContent;
 	private String cpDate;
+	
+	private String title;
+	private String nickName;
+	private String complaint;
 }

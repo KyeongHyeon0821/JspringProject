@@ -49,32 +49,32 @@
 		
 		// 회원 전체 체크/해제
 		function allCheckCheckBoxes() {
-			let isChecked = document.getElementById("allCheck").checked;
-			let checkboxes = document.getElementsByName("eachCheck");
+			let isChecked = document.getElementById("allCheck").checked; // 전체를 대표하는 체크박스 체크 여부
+			let checkboxes = document.getElementsByName("eachCheck");    // 각 회원별 체크 박스
 			
 			for(let i=0; i<checkboxes.length; i++) {
-				checkboxes[i].checked = isChecked;
-			}
+				checkboxes[i].checked = isChecked;												// 전체를 대표하는 체크박스가 체크되어있으면 전부 체크
+			}																														// 그렇지 않으면 전부 체크 해제
 		}
 		
 		// 체크된 회원 레벨 변경
 		function CheckedMemberlevelChange() {
-			let checkedBoxes = document.querySelectorAll('input[name="eachCheck"]:checked');
-			let checkedIdxes = [];
+			let checkedBoxes = document.querySelectorAll('input[name="eachCheck"]:checked'); // 체크가 되어있는 체크박스들
+			let checkedIdxes = []; // 체크 되어있는 체크박스의 각 value값(idx)을 담을 변수를 빈 배열로 선언
 			
-			if (checkedBoxes.length == 0) {
+			if (checkedBoxes.length == 0) { // 체크되어있는 박스가 없을 경우
 		        alert("회원을 선택해주세요.");
 		        return false;
 		    }
 			
 			
-			checkedBoxes.forEach(function(checkbox) {
-				checkedIdxes.push(checkbox.value);
+			checkedBoxes.forEach(function(checkbox) { // 체크가 되어있는 각 체크박스별 함수 실행
+				checkedIdxes.push(checkbox.value);			// 체크 되어있는 체크박스의 value(idx)를 배열에 저장
 		  });
 			
-		  let idxes = checkedIdxes.join(",");
+		  let idxes = checkedIdxes.join(",");      // 배열을 String 타입으로 바꿔서 값 전달
 			
-			let level = document.getElementById("levels").value;
+			let level = document.getElementById("levels").value;  // 선택된 레벨
 			
 			let ans = confirm("선택한 회원들의 등급을 변경하시겠습니까?");
 			if(!ans) {

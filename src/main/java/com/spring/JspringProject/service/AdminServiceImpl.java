@@ -1,5 +1,7 @@
 package com.spring.JspringProject.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,21 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void setBoardTableComplaintOk(int partIdx) {
 		adminDao.setBoardTableComplaintOk(partIdx);
+	}
+
+	@Override
+	public List<ComplaintVo> getComplaintList() {
+		return adminDao.getComplaintList();
+	}
+
+	@Override
+	public int setContentChange(int contentIdx, String contentSw) {
+		return adminDao.setContentChange(contentIdx, contentSw);
+	}
+
+	@Override
+	public int setComplaintDeleteContent(int contentIdx) {
+		return adminDao.setComplaintDeleteContent(contentIdx);
 	}
 
 	

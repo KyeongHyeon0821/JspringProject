@@ -273,7 +273,7 @@ public class BoardController {
 	public String boardComplaintInputPost(ComplaintVo vo) {
 		int res = 0;
 		res = adminService.setBoardComplaintInput(vo);
-		if(res != 0) adminService.setBoardTableComplaintOk(vo.getPartIdx());
+		if(res != 0) adminService.setBoardTableComplaintOk(vo.getBoardIdx());
 		return res + "";
 	}
 	

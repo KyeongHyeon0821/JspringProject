@@ -176,7 +176,7 @@
 		
 			let query = {
 				part : 'board',
-				partIdx : ${vo.idx},
+				boardIdx : ${vo.idx},
 				cpMid : '${sMid}',
 				cpContent : claimContent
 			}
@@ -201,6 +201,11 @@
 <jsp:include page="/WEB-INF/views/include/nav.jsp"/>
 <jsp:include page="/WEB-INF/views/include/slide2.jsp"/>
 <p><br/></p>
+<c:if test="${vo.complaint == 'HI'}">
+	<h3 class="text-center text-danger">해당 게시글은 신고된 글입니다.</h3>
+	<div class="text-center"><input type="button" value="돌아가기" onclick="location.href='boardList?pag=${pag}&pageSize=${pageSize}&search=${search}&searchString=${searchString}'" class="btn btn-info" /></div>
+</c:if>
+<c:if test="${vo.complaint != 'HI'}">
 <div class="container">
   <h2 class="text-center">글 내용 보기</h2>
   <table class="table table-bordered text-center border-secondary-subtle">
@@ -233,7 +238,7 @@
   	<div class="col"><input type="button" value="돌아가기" onclick="location.href='boardList?pag=${pag}&pageSize=${pageSize}&search=${search}&searchString=${searchString}'" class="btn btn-info" /></div>
   	<div class="col">
   		<c:if test="${sMid != vo.mid && vo.complaint == 'NO'}"><a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-danger">신고하기</a></c:if>
-  		<c:if test="${vo.complaint == 'OK'}"><font color="red">현재 게시글은 신고된 글입니다.</font></c:if>
+  		<c:if test="${vo.complaint == 'OK'}"><font color="red"><b>현재 게시글은 신고된 글입니다.</b></font></c:if>
   	</div>
   	<c:if test="${sNickName == vo.nickName || sLevel == 0}">
 	  	<div class="col text-end">
@@ -327,34 +332,35 @@
 </div>
 
 <!-- The Modal -->
-	<div class="modal fade" id="myModal">
-	  <div class="modal-dialog modal-dialog-centered">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h4 class="modal-title">현재 게시글을 신고합니다.</h4>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-	      </div>
-	      <div class="modal-body">
-	      	<h5>신고 사유 선택</h5>
-	      	<form name="modalForm">
-		        <div><input type="radio" name="claim" id="claim1" value="광고,홍보,영리목적"/> 광고,홍보,영리목적</div>
-	          <div><input type="radio" name="claim" id="claim2" value="욕설,비방,차별,혐오"/> 설,비방,차별,혐오</div>
-	          <div><input type="radio" name="claim" id="claim3" value="불법정보"/> 불법정보</div>
-	          <div><input type="radio" name="claim" id="claim4" value="음란,청소년유해"/> 음란,청소년유해</div>
-	          <div><input type="radio" name="claim" id="claim5" value="개인정보노출,유포,거래"/> 개인정보노출,유포,거래</div>
-	          <div><input type="radio" name="claim" id="claim6" value="도배,스팸"/> 도배,스팸</div>
-	          <div><input type="radio" name="claim" id="claim7" value="기타" onclick="etcShow()"/> 기타</div>
-	          <div id="etc"><textarea rows="2" id="claimTxt" class="form-control" style="display:none"></textarea></div>
-	          <hr class="border">
-	          <input type="button" value="확인" onclick="claimCheck()" class="btn btn-success form-control" />
-          </form>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">현재 게시글을 신고합니다.</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+      	<h5>신고 사유 선택</h5>
+      	<form name="modalForm">
+	        <div><input type="radio" name="claim" id="claim1" value="광고,홍보,영리목적"/> 광고,홍보,영리목적</div>
+          <div><input type="radio" name="claim" id="claim2" value="욕설,비방,차별,혐오"/> 설,비방,차별,혐오</div>
+          <div><input type="radio" name="claim" id="claim3" value="불법정보"/> 불법정보</div>
+          <div><input type="radio" name="claim" id="claim4" value="음란,청소년유해"/> 음란,청소년유해</div>
+          <div><input type="radio" name="claim" id="claim5" value="개인정보노출,유포,거래"/> 개인정보노출,유포,거래</div>
+          <div><input type="radio" name="claim" id="claim6" value="도배,스팸"/> 도배,스팸</div>
+          <div><input type="radio" name="claim" id="claim7" value="기타" onclick="etcShow()"/> 기타</div>
+          <div id="etc"><textarea rows="2" id="claimTxt" class="form-control" style="display:none"></textarea></div>
+          <hr class="border">
+          <input type="button" value="확인" onclick="claimCheck()" class="btn btn-success form-control" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</c:if>
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 </body>
