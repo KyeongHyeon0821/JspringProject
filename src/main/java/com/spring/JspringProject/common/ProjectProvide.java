@@ -3,6 +3,9 @@ package com.spring.JspringProject.common;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +40,13 @@ public class ProjectProvide {
 		File file = new File(realPath + photo);
 		if(file.exists()) file.delete();
 	}
-	
+
+	// 파일명 중복방지를 위한 처리
+	public String saveFileName(String oFileName) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+		return sdf.format(date) + "_" + oFileName;
+	}
+
 	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.service.StudyService;
@@ -86,7 +87,7 @@ public class StudyController {
 		return studyService.getCityVosArray(dodo);
 	}
 	
-	// 파일 업로드 폼 보기
+	// 싱글 파일 업로드 폼 보기
 	@RequestMapping(value = ("/fileUpload/fileUpload"), method = RequestMethod.GET )
 	public String fileUploadGet(HttpServletRequest request, Model model) {
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/fileUpload");
@@ -96,7 +97,7 @@ public class StudyController {
 		return "study/fileUpload/fileUpload";
 	}
 
-	// 파일 업로드 처리
+	// 싱글 파일 업로드 처리
 	@RequestMapping(value = ("/fileUpload/fileUpload"), method = RequestMethod.POST )
 	public String fileUploadPost(MultipartFile fName, String mid) {
 		int res = studyService.fileUpload(fName, mid);
@@ -141,6 +142,24 @@ public class StudyController {
 		
 		return res;
 	}
+	
+	
+	// 멀티 파일 압로드 폼보기
+	@RequestMapping(value = ("/fileUpload/multiFile"), method = RequestMethod.GET )
+	public String multiFileGet() {
+		return "study/fileUpload/multiFile";
+	}
+	
+	// 멀티 파일 업로드 처리
+	@RequestMapping(value = ("/fileUpload/multiFile"), method = RequestMethod.POST )
+	public String multiFilePost(MultipartHttpServletRequest mFile) {
+		int res = studyService.multiFileUpload(mFile);
+		
+		if(res != 0) return "redirect:/message/multiFileUploadOk";
+		else return "redirect:/message/multiFileUploadNo";
+	}
+	
+	
 	
 	// 메일 연습 폼 보기
 	@RequestMapping(value = ("/mail/mailForm"), method = RequestMethod.GET )

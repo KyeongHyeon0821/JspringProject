@@ -13,9 +13,13 @@ public class PdsVo {
 	private String title;
 	private String content;
 	private String part;
-	private String hotsIp;
+	private String hostIp;
 	private String fDate;
 	private int downNum;
 	private String openSw;
 	private String complaint;
+	
+	private int dateDiff;
+	private int hourDiff;
+	
 }

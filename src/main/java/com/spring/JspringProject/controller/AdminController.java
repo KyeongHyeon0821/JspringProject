@@ -129,13 +129,13 @@ public class AdminController {
 	@ResponseBody
 	@RequestMapping(value = ("/complaint/contentDelete"), method = RequestMethod.POST)
 	public String contentDeletePost(int contentIdx, String contentName) {
-		String res = "";
-		// 게시글을 삭제하려면 complaint table에서 먼저 해당 게시글에 대한 신고를 삭제 해야함 (외래키로 잡고있기 때문)
-		res = adminService.setComplaintDeleteContent(contentIdx) + "";
-		if(res.equals("1") && contentName.equals("B"))	res = boardService.setBoardDelete(contentIdx) + "";
+		if(contentName.equals("B"))	{ // 신고글이 게시판 글일 경우
+			BoardVo vo = boardService.getBoardContent(contentIdx); // 게시판 vo 생성
+			if(vo.getContent().indexOf("src=\"/") != -1) boardService.imgDelete(vo.getContent()); // 사진이 업로드를 했는지 체크하고 있으면 사진 삭제
+			return boardService.setBoardDelete(contentIdx) + "";
+		}
 		//else if(res.equals("1") && contentName.equals("P")) return pdsService.setPdsDelete(contentIdx) + "";
-		
-		return res;
+		return "0";
 	}
 	
 	

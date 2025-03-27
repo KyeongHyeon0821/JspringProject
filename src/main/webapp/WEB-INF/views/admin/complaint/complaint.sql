@@ -15,7 +15,12 @@ create table complaint(
   foreign key(boardIdx) references board(idx),
   foreign key(pdsIdx) references pds(idx)
 );
-
+/* 신고 처리 테이블 : boardIdx필드와 pdsIdx필드 삭제 후, partIdx필드(해당 part의 고유번호)추가, progress 필드 추가
+ * 신고 처리 하기
+ * complaintSw : H(감추기 - board 테이블의 complaint 필드값을 'HI', complaint 테이블의 progress 필드값을 '처리완료(H)')
+ * complaintSw : S(보이기 - 신고해제 - board 테이블의 complaint 필드값을 'NO', complaint 테이블의 progress 필드값을 '처리완료(S)')
+ * complaintSw : D(삭제하기 - board 테이블의 해당 레코드 삭제처리, complaint 테이블의 progress 필드값을 '처리완료(D)')
+*/
 drop table complaint;
 
 desc complaint;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.JspringProject.dao.BoardDao;
+import com.spring.JspringProject.dao.PdsDao;
 import com.spring.JspringProject.vo.PageVo;
 
 @Service
@@ -11,6 +12,9 @@ public class Pagination {
 	
 	@Autowired
 	BoardDao boarDao;
+	
+	@Autowired
+	PdsDao pdsDao;
 
 	public PageVo getTotRecCnt(int pag, int pageSize, String section, String part, String searchString) {
 		PageVo vo = new PageVo();
@@ -24,11 +28,11 @@ public class Pagination {
 			else totRecCnt = boarDao.getBoardTotRecCntSearch(part, searchString);
 		}
 		else if(section.equals("pds")) {
-			
+			totRecCnt = pdsDao.getPdsTotRecCnt(part);
 		}
 		
 		// 검색기(search(part)와 searchString)를 통한 리스트를 구현하기 위한 처리
-		if(!part.equals("")) {
+		if(!searchString.equals("")) {
 			search = part;
 			if(totRecCnt !=0) pageSize = totRecCnt;
 			if(part.equals("title")) searchStr = "글제목"; 

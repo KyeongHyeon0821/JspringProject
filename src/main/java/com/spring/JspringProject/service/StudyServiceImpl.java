@@ -1,6 +1,5 @@
 package com.spring.JspringProject.service;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.spring.JspringProject.common.ProjectProvide;
 import com.spring.JspringProject.dao.StudyDao;
-import com.spring.JspringProject.vo.MemberVo;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -24,6 +24,9 @@ public class StudyServiceImpl implements StudyService {
 	@Autowired
 	private StudyDao studyDao;
 
+	@Autowired
+	private ProjectProvide projectProvide;
+	
 	@Override
 	public String[] getCityStringArray(String dodo) {
 		String[] strArray = new String[50];
@@ -169,5 +172,39 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	
+	// 멀티 파일 저장 처리
+	@Override
+	public int multiFileUpload(MultipartHttpServletRequest mFile) {
+		int res = 0;
+		
+		try {
+			List<MultipartFile> fileList = mFile.getFiles("fName");
+			String oFileNames = "";
+			String sFileNames = "";
+			int fileSizes = 0;
+			
+			for(MultipartFile file : fileList) {
+				String oFileName = file.getOriginalFilename();
+				String sFileName = projectProvide.saveFileName(oFileName);
+				projectProvide.writeFile(file, sFileName, "fileUpload");
+				
+				oFileNames += oFileName + "/";
+				sFileNames += sFileName + "/";
+				fileSizes += file.getSize();
+			}
+			oFileNames = oFileNames.substring(0, oFileNames.length()-1);
+			sFileNames = sFileNames.substring(0, sFileNames.length()-1);
+			
+			System.out.println("원본파일 : " + oFileNames);
+			System.out.println("저장파일 : " + sFileNames);
+			System.out.println("총사이즈 : " + fileSizes);
+			
+			res = 1;
+		} catch (IOException e) {
+		}
+		
+		return res;
+	}
+
 	
 }

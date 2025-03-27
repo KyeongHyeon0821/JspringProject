@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.JspringProject.dao.PdsDao">
+  
+  <select id="getPdsTotRecCnt" resultType="int">
+  	select count(*) from pds <if test='part != "전체"'> where part = #{part} </if> ;
+  </select>
+  
+  <select id="getPdsList" resultType="com.spring.JspringProject.vo.PdsVo">
+  	select *, datediff(fDate, now()) as dateDiff, timestampdiff(hour, fDate, now()) as hourDiff
+  		from pds <if test='part != "전체"'> where part = #{part} </if> 
+  		order by idx desc limit #{startIndexNo}, #{pageSize};
+  </select>
+  
+  <insert id="setPdsInput">
+  	insert into pds values(default,#{vo.mid},#{vo.nickName},#{vo.fName},#{vo.fSName},#{vo.fSize},#{vo.title},#{vo.content},#{vo.part},#{vo.hostIp},#{vo.openSw},default,default,default);
+  </insert>
+  
+  <delete id="setPdsDelete">
+  	delete from pds where idx = #{idx};
+  </delete>
+</mapper>

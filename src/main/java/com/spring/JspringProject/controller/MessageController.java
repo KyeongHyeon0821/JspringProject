@@ -204,6 +204,30 @@ public class MessageController {
 			model.addAttribute("message", "게시글이 수정 실패");
 			model.addAttribute("url", "board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize+"&search="+search+"&searchString="+searchString);
 		}
+		else if(msgFlag.equals("levelError")) {
+			model.addAttribute("message", "회원등급을 확인하세요.");
+			model.addAttribute("url", "member/memberMain");
+		}
+		else if(msgFlag.equals("loginError")) {
+			model.addAttribute("message", "로그인 후 사용하세요.");
+			model.addAttribute("url", "member/memberLogin");
+		}
+		else if(msgFlag.equals("multiFileUploadOk")) {
+			model.addAttribute("message", "멀티파일 업로드 성공!");
+			model.addAttribute("url", "study/fileUpload/multiFile");
+		}
+		else if(msgFlag.equals("multiFileUploadNo")) {
+			model.addAttribute("message", "멀티파일 업로드 실패!!!");
+			model.addAttribute("url", "study/fileUpload/multiFile");
+		}
+		else if(msgFlag.equals("pdsInputOk")) {
+			model.addAttribute("message", "자료실에 자료가 업로드 되었습니다.");
+			model.addAttribute("url", "pds/pdsList");
+		}
+		else if(msgFlag.equals("pdsInputOk")) {
+			model.addAttribute("message", "자료실에 자료 업로드 실패!!");
+			model.addAttribute("url", "pds/pdsInput");
+		}
 		
 		
 		return "include/message";
