@@ -16,4 +16,8 @@ public interface PdsDao {
 
 	int setPdsDelete(@Param("idx") int idx);
 
+	int setPdsDownNumPlus(@Param("idx") int idx);
+
+	PdsVo getPdsContent(@Param("idx") int idx);
+
 }

@@ -112,7 +112,8 @@
 					<td>${file}</td>
 					<td>
 						<c:set var="fNameArray" value="${fn:split(file,'.')}" />
-						<c:set var="extName" value="${fn:toLowerCase(fNameArray[1])}" />
+						<%-- <c:set var="extName" value="${fn:toLowerCase(fNameArray[1])}" /> --%>
+						<c:set var="extName" value="${fn:toLowerCase(fNameArray[fn:length(fNameArray)-1])}"/>
 						<c:if test="${extName == 'jpg' || extName == 'gif' || extName == 'png'}"><a href="${ctp}/fileUpload/${file}" target="_blank" title="원본사진보기"><img src="${ctp}/fileUpload/${file}" width="150px" /></a></c:if>
 						<c:if test="${extName == 'zip'}">압축파일</c:if>
 						<c:if test="${extName == 'ppt' || extName == 'pptx'}">파워포인트파일</c:if>

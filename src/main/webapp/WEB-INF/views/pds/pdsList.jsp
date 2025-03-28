@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% pageContext.setAttribute("CRLF", "\r\n"); %>
+<% pageContext.setAttribute("LF", "\n"); %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -73,6 +75,19 @@
 			}
 			$("#myModal .modal-body .imgs").html(imgs);
 		}
+		
+		// 다운로드 수 증가 처리
+		function downNumCheck(idx) {
+			$.ajax({
+				url : "${ctp}/pds/pdsDownNumCheck",
+				type : "post",
+				data : {idx : idx},
+				success : function(res) {
+					location.reload();
+				},
+				error : function() { alert("전송오류!"); }
+			});
+		}
 	</script>
 	<link rel="stylesheet" type="text/css" href="${ctp}/css/linkOrange.css" />
 </head>
@@ -116,7 +131,9 @@
   	<c:forEach var="vo" items="${vos}" varStatus="st">
   		<tr>
   			<td>${curScrStartNo}</td>
-  			<td>${vo.title}</td>
+  			<td>
+  				<a href="pdsContent?idx=${vo.idx}&pag=${pageVo.pag}&pageSize=${pageVo.pageSize}&part=${pageVo.part}">${vo.title}</a>
+  			</td>
   			<td>${vo.nickName}</td>
   			<td>
   				${vo.dateDiff == 0 ? fn:substring(vo.FDate, 11, 19) : fn:substring(vo.FDate, 0, 10)}
@@ -126,15 +143,19 @@
   				<c:set var="fNames" value="${fn:split(vo.FName, '/')}" />
   				<c:set var="fSNames" value="${fn:split(vo.FSName, '/')}" />
   				<c:forEach var="fName" items="${fNames}" varStatus="st">
-  					<a href="${fSNames[st.index]}" download="${fName}">${fName}</a><br/>
+  					<a href="${fSNames[st.index]}" download="${fName}" onclick="downNumCheck(${vo.idx})">${fName}</a><br/>
   				</c:forEach>
   				(<fmt:formatNumber value="${vo.FSize/1024}" pattern="#,##0" />KByte)
   			</td>
   			<td>${vo.downNum}</td>
   			<td>
-  				<a href="javascript:deleteContent(${vo.idx}, '${vo.FSName}')" class="badge bg-danger">삭제</a> /
-  				<button style="border:none;" type="button" onclick="showContentModal(${vo.idx},'${vo.nickName}','${vo.title}', '${vo.content}', '${vo.part}', '${vo.hostIp}', '${vo.openSw}','${vo.FDate}', '${vo.downNum}', '${vo.FSize}', '${vo.FName}', '${vo.FSName}')" class="badge bg-primary" data-bs-toggle="modal" data-bs-target="#myModal">상세보기</button>
-  				 
+  				<c:if test="${sMid == vo.mid || sLevel == 0}">
+  					<a href="javascript:deleteContent(${vo.idx}, '${vo.FSName}')" class="badge bg-danger">삭제</a>
+  				</c:if>
+  				<c:if test="${empty vo.content}"><c:set var="content" value="내용없음" /></c:if>
+					<c:if test="${!empty vo.content}"><c:set var="content" value="${fn:replace(fn:replace(vo.content, CRLF, '<br/>'), LF, '<br/>')}" /></c:if>
+  				<button style="border:none;" type="button" onclick="showContentModal(${vo.idx},'${vo.nickName}','${vo.title}', '${content}', '${vo.part}', '${vo.hostIp}', '${vo.openSw}','${vo.FDate}', '${vo.downNum}', '${vo.FSize}', '${vo.FName}', '${vo.FSName}')" class="badge bg-primary" data-bs-toggle="modal" data-bs-target="#myModal">상세보기</button>
+  				<a href="pdsTotalDown?idx=${vo.idx}" class="badge bg-warning" >전체다운</a>
   			</td>
   		</tr>
   		<c:set var="curScrStartNo" value="${curScrStartNo -1}" />
@@ -159,7 +180,7 @@
 
 <!-- The Modal -->
 	<div class="modal fade" id="myModal">
-	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h4 class="modal-title">자료실 게시글 상세보기</h4>

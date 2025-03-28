@@ -1,8 +1,13 @@
 package com.spring.JspringProject.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +30,9 @@ public class PdsServiceImpl implements PdsService {
 
 	@Autowired
 	ProjectProvide projectProvide;
+	
+	@Autowired
+	PdsService pdsService;
 
 	@Override
 	public List<PdsVo> getPdsList(int startIndexNo, int pageSize, String part, String search, String searchString) {
@@ -64,7 +72,7 @@ public class PdsServiceImpl implements PdsService {
 	
 	// 해당 자료실 게시글에서 업로드한 사진 삭제 후 DB 삭제 처리
 	@Override
-	public int imgDelete(int idx, String fSName) {
+	public int setPdsDelete(int idx, String fSName) {
 		// 사진 삭제 처리
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/pds/");
@@ -85,6 +93,84 @@ public class PdsServiceImpl implements PdsService {
 		// DB 삭제 처리
 		if(res == 1) return pdsDao.setPdsDelete(idx);
 		else return 0;
+	}
+
+	@Override
+	public int setPdsDownNumPlus(int idx) {
+		return pdsDao.setPdsDownNumPlus(idx);
+	}
+
+	@Override
+	public PdsVo getPdsContent(int idx) {
+		return pdsDao.getPdsContent(idx);
+	}
+
+	// 여러개의 파일을 하나의 통합파일(zip)로 다운로드 처리, 파일명은 '제목.zip'
+	@Override
+	public String pdsTotalDown(HttpServletRequest request, int idx) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/pds/");
+		
+		PdsVo vo = pdsService.getPdsContent(idx);
+		
+		String[] fNames = vo.getFName().split("/");
+		String[] fSNames = vo.getFSName().split("/");
+		
+		String zipPath = realPath + "temp/";
+		String zipName = vo.getTitle() + ".zip";
+		
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		ZipOutputStream zout = null;
+		try {
+			zout = new ZipOutputStream(new FileOutputStream(zipPath + zipName));
+		} catch (FileNotFoundException e1) { e1.printStackTrace(); }
+		
+		byte[] bytes = new byte[2048]; // 2k단위로
+		
+		for(int i=0; i<fSNames.length; i++) {
+			try {
+				fis = new FileInputStream(realPath + fSNames[i]);
+				fos = new FileOutputStream(zipPath + fNames[i]);
+				File copyFile = new File(zipPath + fNames[i]);
+				
+				int data = 0;
+				
+				while((data = fis.read(bytes, 0, bytes.length)) != -1) {
+					fos.write(bytes, 0, data);
+				}
+				fos.flush();
+				fos.close();
+				fis.close();
+				
+				fis = new FileInputStream(copyFile);
+				zout.putNextEntry(new ZipEntry(fNames[i]));
+				while((data = fis.read(bytes, 0, bytes.length)) != -1) {
+					zout.write(bytes, 0, data);
+				}
+				zout.flush();
+				zout.closeEntry();
+				fis.close();
+				
+			} catch (FileNotFoundException e) {	e.printStackTrace(); } catch (IOException e) { e.printStackTrace();	}
+		}
+		try {
+			zout.close();
+		} catch (IOException e) { e.printStackTrace(); }
+		
+		// 작업 완료 후.. 
+		
+		// 서버의 기본파일 삭제처리(temp 폴더의 파일 삭제처리, zip 파일 제외)
+		File folder = new File(zipPath);
+		File[] files = folder.listFiles();
+		if(files.length != 0) {
+			for(File file : files) {
+				String fName = file.toString();
+				if(!zipName.equals(fName.substring(fName.lastIndexOf("\\")+1))) file.delete();
+			}
+		}
+		
+		// 클라이언트로 다운로드..
+		return zipName;
 	}
 	
 }

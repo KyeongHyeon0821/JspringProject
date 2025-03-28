@@ -2,6 +2,8 @@ package com.spring.JspringProject.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.JspringProject.vo.PdsVo;
@@ -12,6 +14,12 @@ public interface PdsService {
 
 	int setPdsInput(MultipartHttpServletRequest mFName, PdsVo vo);
 
-	int imgDelete(int idx, String fSName);
+	int setPdsDelete(int idx, String fSName);
+
+	int setPdsDownNumPlus(int idx);
+
+	PdsVo getPdsContent(int idx);
+
+	String pdsTotalDown(HttpServletRequest request, int idx);
 
 }

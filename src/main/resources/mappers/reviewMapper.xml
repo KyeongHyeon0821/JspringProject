@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.JspringProject.dao.ReviewDao">
+  
+  <insert id="setReviewInput">
+  	insert into review values(default,#{vo.part},#{vo.partIdx},#{vo.mid},#{vo.nickName},#{vo.star},#{vo.content},default);
+  </insert>
+  
+  <select id="getPdsReviewList" resultType="com.spring.JspringProject.vo.ReviewVo">
+  	select * from review where part = #{part} and partIdx = #{idx};
+  </select>
+  
+  <select id="getPdsReviewAvg" resultType="double">
+  	select avg(star) from review where part = #{part} and partIdx = #{idx};
+  </select>
+  
+  <select id="getPdsReviewReplyList" resultType="com.spring.JspringProject.vo.ReviewReplyVo">
+  	select  * from reviewReply where reviewIdx in (select review.idx from review where partIdx = #{idx} and part = #{part}) and reviewPart = #{part};
+  </select>
+  
+</mapper>

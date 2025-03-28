@@ -1,6 +1,7 @@
 package com.spring.JspringProject.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +63,35 @@ public class HomeController {
 		fos.close();
 	}
 	
+	// 파일 다운처리
+	@GetMapping("/fileDownAction")
+	public void fileDownActionGet(HttpServletRequest request, HttpServletResponse response ,String path, String file) throws IOException {
+		
+		if(path.equals("pds")) path += "/temp/";
+		
+		String realPathFile = request.getSession().getServletContext().getRealPath("/resources/data/" + path) + file;
+		
+		File downFile = new File(realPathFile);
+		
+		String downStringName = new String(file.getBytes("UTF-8"), "8859_1");
+		response.setHeader("Content-Disposition", "attachement;filename=" + downStringName);
+		
+		FileInputStream fis = new FileInputStream(downFile);
+		ServletOutputStream sos = response.getOutputStream();
+		
+		byte[] bytes = new byte[2048]; // 2k단위로
+		int data = 0;
+		
+		while((data = fis.read(bytes, 0, bytes.length)) != -1) {
+			sos.write(bytes, 0, data);
+		}
+		sos.flush();
+		sos.close();
+		fis.close();
+		
+		if(path.equals("pds/temp/")) downFile.delete(); // 자료실에서 이 메소드를 호출했을 경우 zip 파일 삭제
+		
+	}
 	
 	
 	
