@@ -29,6 +29,7 @@
 			<mapping path="/user/**"/>
 	    <mapping path="/user2/**"/>
 	    <mapping path="/study/**"/>
+	    <mapping path="/schedule/**"/>
 			<mapping path="/pds/pdsList"/>
 			<mapping path="/member/memberList"/>
 			<mapping path="/member/memberSearch"/>

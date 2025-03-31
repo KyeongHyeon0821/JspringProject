@@ -220,4 +220,12 @@ public class StudyController {
 		return "study/modal/modalForm";
 	}
 	
+	// 인터넷 달력 연습
+	@RequestMapping(value = ("/calendar"), method = RequestMethod.GET)
+	public String calendarGet() {
+		studyService.getCalendar();
+		
+		return "study/calendar/calendar";
+	}
+	
 }
