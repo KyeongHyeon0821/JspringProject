@@ -45,7 +45,8 @@
 	        <a href="#" class="w3-bar-item w3-button">카카오맵</a>
 	        <a href="#" class="w3-bar-item w3-button">날씨API</a>
 	        <a href="#" class="w3-bar-item w3-button">웹차트</a>
-	        <a href="#" class="w3-bar-item w3-button">웹크롤링</a>
+	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">웹크롤링(jsoup)</a>
+	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">웹크롤링(selenium)</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">

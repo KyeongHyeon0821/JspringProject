@@ -11,5 +11,5 @@ public class ScheduleVo {
 	private String content;
 	
 	private String ymd;
-	
+	private int partCnt;
 }

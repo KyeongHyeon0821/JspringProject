@@ -3,12 +3,15 @@
 <mapper namespace="com.spring.JspringProject.dao.ScheduleDao">
   
   <select id="getScheduleList" resultType="com.spring.JspringProject.vo.ScheduleVo">
-  	select * from schedule where mid=#{mid} and date_format(sDate, '%Y-%m')=#{ym};
+  	<!-- select * from schedule where mid=#{mid} and date_format(sDate, '%Y-%m')=#{ym}; -->
+  	select *, count(part) as partCnt from schedule where date_format(sDate, '%Y-%m') = #{ym} and mid = #{mid} group by sDate,part order by sDate, part;
   </select>
   
   <select id="getScheduleMenu" resultType="com.spring.JspringProject.vo.ScheduleVo">
   	select * from schedule where mid=#{mid} and date_format(sDate, '%Y-%m-%d')=#{ymd};
   </select>
+  
+  
   
   <insert id="setScheduleInput">
   	insert into schedule values(default,#{vo.mid},#{vo.ymd},#{vo.part},#{vo.content});

@@ -71,7 +71,7 @@
         	  <a href="scheduleMenu?ymd=${ymd}">${st.count}<br/>
 	        	  <c:forEach var="vo" items="${vos}">
 	        	  	<c:if test="${fn:substring(vo.SDate,8,10) == st.count}">
-	        	  		- ${vo.part}<br/>
+	        	  		- ${vo.part}(${vo.partCnt})<br/>
 	        	  	</c:if>
 	        	  </c:forEach>
         	  </a>

@@ -37,3 +37,9 @@ insert into schedule values(default, 'kms1234', '2025-03-31', '학습', '프로�
 insert into schedule values(default, 'kms1234', '2025-03-31', '업무', '프로젝트 기획안 회의');
 
 select * from schedule where mid='hkd1234' and date_format(sDate, '%Y-%m')='2025-04';
+
+select * from schedule where date_format(sDate, '%Y-%m') ='2025-04' and mid = 'kms1234';
+select * from schedule where date_format(sDate, '%Y-%m') ='2025-04' and mid = 'kms1234' order by sDate;
+select * from schedule where date_format(sDate, '%Y-%m') ='2025-04' and mid = 'kms1234' order by sDate, part;
+select * from schedule where date_format(sDate, '%Y-%m') ='2025-04' and mid = 'kms1234' group by sDate,part order by sDate, part;
+select *, count(part) as partCnt from schedule where date_format(sDate, '%Y-%m') = '2025-04' and mid = 'kms1234' group by sDate order by sDate, part;
