@@ -20,7 +20,8 @@ public class MessageController {
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize,
 			@RequestParam(name="search", defaultValue = "", required = false) String search,
-			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="mSw", defaultValue = "1", required = false) String mSw
 		) {
 		
 		if(msgFlag.equals("userInputOk")) {
@@ -227,6 +228,38 @@ public class MessageController {
 		else if(msgFlag.equals("pdsInputOk")) {
 			model.addAttribute("message", "자료실에 자료 업로드 실패!!");
 			model.addAttribute("url", "pds/pdsInput");
+		}
+		else if(msgFlag.equals("wmMemberIdNo")) {
+			model.addAttribute("message", "존재하지 않는 회원입니다.\\n다시 입력하세요.");
+			model.addAttribute("url", "webMessage/webMessage?mSw=0");
+		}
+		else if(msgFlag.equals("wmInputOk")) {
+			model.addAttribute("message", "메세지가 전송되었습니다.");
+			model.addAttribute("url", "webMessage/webMessage?mSw=3");
+		}
+		else if(msgFlag.equals("wmInputNo")) {
+			model.addAttribute("message", "메세지 전송 실패!");
+			model.addAttribute("url", "webMessage/webMessage?mSw=0");
+		}
+		else if(msgFlag.equals("wmDeleteOk")) {
+			model.addAttribute("message", "메세지가 삭제되었습니다.");
+			model.addAttribute("url", "webMessage/webMessage?mSw="+mSw);
+		}
+		else if(msgFlag.equals("wmDeleteNo")) {
+			model.addAttribute("message", "메세지 삭제실패!");
+			model.addAttribute("url", "webMessage/webMessage?mSw="+mSw);
+		}
+		else if(msgFlag.equals("webMessageEmpty")) {
+			model.addAttribute("message", "휴지통이 비어있습니다.");
+			model.addAttribute("url", "webMessage/webMessage?mSw="+5);
+		}
+		else if(msgFlag.equals("webMessageResetOk")) {
+			model.addAttribute("message", "휴지통을 모두 비웠습니다.");
+			model.addAttribute("url", "webMessage/webMessage?mSw="+5);
+		}
+		else if(msgFlag.equals("webMessageResetNo")) {
+			model.addAttribute("message", "휴지통 비우고 실패!");
+			model.addAttribute("url", "webMessage/webMessage?mSw="+5);
 		}
 		
 		

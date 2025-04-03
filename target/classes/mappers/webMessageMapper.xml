@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.JspringProject.dao.WebMessageDao">
+  
+  <select id="getTotRecCnt" resultType="int">
+  	<if test="mSw == 1"> <!-- 받은메세지 -->
+  		select count(*) from webMessage where receiveId = #{mid} and (receiveSw = 'n' or receiveSw = 'r');
+  	</if>
+  	<if test="mSw == 2"> <!-- 새메세지 -->
+  		select count(*) from webMessage where receiveId = #{mid} and receiveSw = 'n';
+  	</if>
+  	<if test="mSw == 3"> <!-- 보낸메세지 -->
+  	  select count(*) from webMessage where sendId = #{mid} and sendSw = 's';
+  	</if>
+  	<if test="mSw == 4"> <!-- 수신확인 -->
+  		select count(*) from webMessage where sendId = #{mid} and receiveSw = 'n';
+  	</if>
+  	<if test="mSw == 5"> <!-- 휴지통 -->
+  		select count(*) from webMessage where (sendId = #{mid} and sendSw='g') or (receiveId = #{mid} and receiveSw='g');
+  	</if>
+  </select>
+  
+  
+  <select id="getWebMessageList" resultType="com.spring.JspringProject.vo.WebMessageVo">
+  	<if test="mSw == 1"> <!-- 받은메세지 -->
+  		select * from webMessage where receiveId = #{mid} and (receiveSw = 'n' or receiveSw = 'r') order by idx desc limit #{startIndexNo}, #{pageSize};
+  	</if>
+  	<if test="mSw == 2"> <!-- 새메세지 -->
+  		select * from webMessage where receiveId = #{mid} and receiveSw = 'n' order by idx desc limit #{startIndexNo}, #{pageSize};
+  	</if>
+  	<if test="mSw == 3"> <!-- 보낸메세지 -->
+  	  select * from webMessage where sendId = #{mid} and sendSw = 's' order by idx desc limit #{startIndexNo}, #{pageSize};
+  	</if>
+  	<if test="mSw == 4"> <!-- 수신확인 -->
+  		select * from webMessage where sendId = #{mid} and receiveSw = 'n' order by idx desc limit #{startIndexNo}, #{pageSize};
+  	</if>
+  	<if test="mSw == 5"> <!-- 휴지통 -->
+  		select * from webMessage where (sendId = #{mid} and sendSw='g') or (receiveId = #{mid} and receiveSw='g') order by idx desc limit #{startIndexNo}, #{pageSize};
+  	</if>
+  </select>
+  
+  
+  
+  <select id="getWebMessageContent" resultType="com.spring.JspringProject.vo.WebMessageVo">
+  	select * from webMessage where idx = #{idx};
+  </select>
+  
+  
+  <insert id="setWmInputOk">
+  	insert into webMessage values(default,#{vo.title},#{vo.content},#{vo.sendId},default,default,#{vo.receiveId},default,default);
+  </insert>
+  
+  <update id="setWmDeleteCheck">
+  	<if test="mFlag == 3">
+	    update webMessage set sendSw = 'x' where idx = #{idx};
+    </if>
+    <if test="mFlag != 3 and mFlag != 5">
+    	update webMessage set receiveSw = 'g' where idx = #{idx};
+    </if>
+  </update>
+  
+  <update id="setWebMessageSwUpdate">
+  	update webMessage set receiveSw = 'r', receiveDate = now() where idx = #{idx};
+  </update>
+  
+  <update id="setWebMessageDeleteAll">
+  	update webMessage set receiveSw = 'x' where receiveId = #{mid} and receiveSw = 'g';
+  </update>
+  
+  <delete id="setWebMessageDeleteAllProcess">
+  	delete from webMessage where receiveSw = 'x' and sendSw = 'x';
+  </delete>
+  
+</mapper>
