@@ -44,7 +44,8 @@
 	      <div class="w3-dropdown-content w3-bar-block w3-card-4">
 	        <a href="#" class="w3-bar-item w3-button">카카오맵</a>
 	        <a href="#" class="w3-bar-item w3-button">날씨API</a>
-	        <a href="#" class="w3-bar-item w3-button">웹차트</a>
+	        <a href="${ctp}/study/chart/chart1" class="w3-bar-item w3-button">웹차트1</a>
+	        <a href="${ctp}/study/chart2/chart2" class="w3-bar-item w3-button">웹차트2</a>
 	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">웹크롤링(jsoup)</a>
 	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">웹크롤링(selenium)</a>
 	      </div>

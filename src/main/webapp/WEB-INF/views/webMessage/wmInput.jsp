@@ -85,27 +85,27 @@
 			</tr>
 		</table>
 	</form>
+	
+	<!-- The Modal -->
+	<div class="modal fade" id="myModal">
+	  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title" style="text-align: center;">회원 아이디 리스트</h4>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<c:forEach var="vo" items="${mVos}" varStatus="st">
+	      		<a href="javascript:inputMid('${vo.mid}')">${vo.mid}</a><br>
+	      	</c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
 <p><br/></p>
-
-<!-- The Modal -->
-<div class="modal fade" id="myModal">
-  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">회원 아이디 리스트</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-      	<c:forEach var="vo" items="${mVos}" varStatus="st">
-      		<a href="javascript:inputMid('${vo.mid}')">${vo.mid}</a><br>
-      	</c:forEach>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>

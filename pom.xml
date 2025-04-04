@@ -117,7 +117,7 @@
 			<scope>test</scope>
 		</dependency> 
 		
-<!-- lombok 라이브러리 -->
+		<!-- lombok 라이브러리 -->
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 	    <groupId>org.projectlombok</groupId>

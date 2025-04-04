@@ -29,14 +29,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.service.StudyService;
+import com.spring.JspringProject.vo.ChartVo;
 import com.spring.JspringProject.vo.CrawlingVo;
 import com.spring.JspringProject.vo.MailVo;
 import com.spring.JspringProject.vo.MemberVo;
@@ -559,6 +563,58 @@ public class StudyController {
 			e.printStackTrace();
 		}
 		return array;
+	}
+
+	
+	@RequestMapping(value = "/chart/chart1", method = RequestMethod.GET)
+	public String chart1Get(Model model,
+			@RequestParam(name="part", defaultValue = "barV", required = false) String part
+		) {
+		model.addAttribute("part", part);
+		return "study/chart/chart1";
+	}
+	
+	//웹(구글) 차트 연습2
+	@RequestMapping(value="/chart2/chart2", method = RequestMethod.GET)
+	public String chart2Get(Model model,
+			@RequestParam(name="part", defaultValue = "barV", required=false) String part
+			) {
+		model.addAttribute("part", part);
+		return "study/chart2/chart2";
+	}
+	
+	@RequestMapping(value = "/chart2/googleChart2", method = RequestMethod.POST)
+	public String googleChart2Post(Model model, ChartVo vo) {
+		model.addAttribute("vo", vo);
+		return "study/chart2/chart2";
+	}
+	
+	@RequestMapping(value = "/chart2/googleChar2Recently", method = RequestMethod.POST)
+	public String googleChart2RecentlyGet(Model model, ChartVo vo) {
+		//System.out.println("part : " + vo.getPart());
+		
+		List<ChartVo> vos = null;
+		if(vo.getPart().equals("lineChartVisitCount")) {
+			vos = studyService.getRecentlyVisitCount(1);
+			// vos자료를 차트에 표시처리가 잘 되지 않을경우에는 각각의 자료를 다시 편집해서 차트로 보내줘야 한다.
+			String[] visitDates = new String[7];
+			int[] visitCounts = new int[7];
+			
+			for(int i=0; i<7; i++) {
+				visitDates[i] = vos.get(i).getVisitDate();
+				visitCounts[i] = vos.get(i).getVisitCount();
+			}
+			
+			model.addAttribute("part", vo.getPart());
+			model.addAttribute("xTitle", "방문날짜");
+			model.addAttribute("regend", "하루 총 방문자수");
+			
+			model.addAttribute("visitDates", visitDates);
+			model.addAttribute("visitCounts", visitCounts);
+			model.addAttribute("title", "최근 7일간 방문횟수");
+			model.addAttribute("subTitle", "(최근 7일간 방문한 해당일자의 방문자 총수를 표시합니다.");
+		}
+		return "study/chart2/chart2Form";
 	}
 	
 }
