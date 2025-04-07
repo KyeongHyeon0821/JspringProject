@@ -37,6 +37,7 @@
 	        <a href="${ctp}/study/mail/mailForm" class="w3-bar-item w3-button">메일 연습</a>
 	        <a href="${ctp}/study/modal/modalForm" class="w3-bar-item w3-button">모달 연습</a>
 	        <a href="${ctp}/study/calendar" class="w3-bar-item w3-button">인터넷 달력</a>
+	        <a href="${ctp}/errorPage/errorMain" class="w3-bar-item w3-button">Error 연습</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">
@@ -48,6 +49,7 @@
 	        <a href="${ctp}/study/chart2/chart2" class="w3-bar-item w3-button">웹차트2</a>
 	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">웹크롤링(jsoup)</a>
 	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">웹크롤링(selenium)</a>
+	        <a href="${ctp}/study/qrCode/qrCodeForm" class="w3-bar-item w3-button">QR Code</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">

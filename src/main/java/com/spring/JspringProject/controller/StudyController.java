@@ -11,7 +11,9 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,6 +46,7 @@ import com.spring.JspringProject.vo.ChartVo;
 import com.spring.JspringProject.vo.CrawlingVo;
 import com.spring.JspringProject.vo.MailVo;
 import com.spring.JspringProject.vo.MemberVo;
+import com.spring.JspringProject.vo.QrCodeVo;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -615,6 +618,82 @@ public class StudyController {
 			model.addAttribute("subTitle", "(최근 7일간 방문한 해당일자의 방문자 총수를 표시합니다.");
 		}
 		return "study/chart2/chart2Form";
+	}
+	
+	// 임의의 영문자와 숫자를 랜덤하게 생성시켜주기
+	@RequestMapping(value = "/alphaNumericForm", method = RequestMethod.GET)
+	public String alphaNumericFormGet() {
+		return "study/alphaNumeric/alphaNumericForm";
+	}
+	
+//	// 임의의 영문자와 숫자를 랜덤하게 생성시켜주기
+//	@ResponseBody
+//	@RequestMapping(value = "/randomAlphaNumeric", method = RequestMethod.POST)
+//	public String randomAlphaNumericPost() {
+//		//String res = RandomStringUtils.randomAlphanumeric(32);
+//		return RandomStringUtils.randomAlphanumeric(64);
+//	}
+	
+	// QR Code 폼보기
+	@RequestMapping(value = "/qrCode/qrCodeForm", method = RequestMethod.GET)
+	public String qrCodeFormGet() {
+		return "study/qrCode/qrCodeForm";
+	}
+	
+	// QR Code 만들기
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeCreate", method = RequestMethod.POST)
+	public String qrCodeCreatePost(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String mid = (String) session.getAttribute("sMid");
+		
+		return studyService.setQrCodeCreate(mid);
+	}
+	
+	// QR Code 개인정보 등록 폼보기
+	@RequestMapping(value = "/qrCode/qrCodeEx1", method = RequestMethod.GET)
+	public String qrCodeEx1Get() {
+		return "study/qrCode/qrCodeEx1";
+	}
+	
+	// QR Code 만들기(개인정보를 QR코드로 생성하기)
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeCreate1", method = RequestMethod.POST, produces="application/text; charset=utf-8")
+	public String qrCodeCreate1Post(QrCodeVo vo) {
+		return studyService.setQrCodeCreate(vo);
+	}
+	
+	// QR Code 소개사이트 등록 폼보기
+	@RequestMapping(value = "/qrCode/qrCodeEx2", method = RequestMethod.GET)
+	public String qrCodeEx2Get() {
+		return "study/qrCode/qrCodeEx2";
+	}
+	
+	// QR Code 만들기(소개사이트 QR코드로 생성하기)
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeCreate2", method = RequestMethod.POST, produces="application/text; charset=utf-8")
+	public String qrCodeCreate2Post(QrCodeVo vo) {
+		return studyService.setQrCodeCreate2(vo);
+	}
+	
+	// QR Code 티켓예매 등록 폼보기
+	@RequestMapping(value = "/qrCode/qrCodeEx3", method = RequestMethod.GET)
+	public String qrCodeEx3Get() {
+		return "study/qrCode/qrCodeEx3";
+	}
+	
+	// QR Code 만들기(티켓예매 QR코드로 생성 및 티켓정보 DB에 저장하기)
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeCreate3", method = RequestMethod.POST, produces="application/text; charset=utf-8")
+	public String qrCodeCreate3Post(QrCodeVo vo) {
+		return studyService.setQrCodeCreate3(vo);
+	}
+	
+	// QR Code 내용 DB에서 검색하기
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeSearch", method = RequestMethod.POST)
+	public QrCodeVo qrCodeSearchPost(String qrCode) {
+		return studyService.getQrCodeSearch(qrCode);
 	}
 	
 }

@@ -255,6 +255,14 @@
 	    <classifier>models</classifier>
 		</dependency>
 		
+		<!-- QR Code 생성을 위한 구글라이브러리(zxing) -->
+		<!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
+		<dependency>
+	    <groupId>com.google.zxing</groupId>
+	    <artifactId>javase</artifactId>
+	    <version>3.5.3</version>
+		</dependency>
+		
 		       
 	</dependencies>
     <build>

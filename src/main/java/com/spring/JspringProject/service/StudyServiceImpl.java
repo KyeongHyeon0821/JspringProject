@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.spring.JspringProject.common.ProjectProvide;
 import com.spring.JspringProject.dao.StudyDao;
 import com.spring.JspringProject.vo.ChartVo;
+import com.spring.JspringProject.vo.QrCodeVo;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -282,6 +283,78 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public List<ChartVo> getRecentlyVisitCount(int i) {
 		return studyDao.getRecentlyVisitCount(i);
+	}
+	
+	@Override
+	public String setQrCodeCreate(String mid) {
+		String qrCodeName = projectProvide.saveFileName(mid);
+		String qrCodeImage = "생성된 QR코드명 : " + qrCodeName;
+		
+		projectProvide.qrCodeCreate(qrCodeName, qrCodeImage, "qrCode");
+		
+		return qrCodeName;
+	}
+
+	@Override
+	public String setQrCodeCreate(QrCodeVo vo) {
+		String qrCodeName = projectProvide.newNameCreate(2);	// '2504071227X7_'
+		String qrCodeImage = "";
+		
+		qrCodeName += vo.getMid() + "_"+ vo.getName() + "_" + vo.getEmail();
+		qrCodeImage += "생성날짜 : " + "20" + qrCodeName.substring(0,2) + "년, " + qrCodeName.substring(2,4) + "월, " + qrCodeName.substring(4,6) + "일\n";
+		qrCodeImage += "아이디 : " + vo.getMid() + "\n";
+		qrCodeImage += "성명 : " + vo.getName() + "\n";
+		qrCodeImage += "이메일 : " + vo.getEmail();
+		
+		projectProvide.qrCodeCreate(qrCodeName, qrCodeImage, "qrCode");
+		
+		return qrCodeName;
+	}
+
+	@Override
+	public String setQrCodeCreate2(QrCodeVo vo) {
+		String qrCodeName = projectProvide.newNameCreate(2);
+		String qrCodeImage = "";
+		
+		qrCodeName += vo.getMoveUrl();
+		qrCodeImage += vo.getMoveUrl();
+		
+		projectProvide.qrCodeCreate(qrCodeName, qrCodeImage, "qrCode");
+		
+		return qrCodeName;
+	}
+
+	@Override
+	public String setQrCodeCreate3(QrCodeVo vo) {
+		// QR코드 생성(예매처리)
+		String qrCodeName = projectProvide.newNameCreate(2);	// '2504071227X7_'
+		String qrCodeImage = "";
+		
+		qrCodeName += vo.getMid() + "_"+ vo.getMovieName() + "_" + vo.getMovieDate() + "_" + vo.getMovieTime() + "_" + vo.getMovieAdult() + "_" + vo.getMovieChild();
+		qrCodeImage += "구매자 ID : " + vo.getMid() + "\n";
+		qrCodeImage += "영화제목 : " + vo.getMovieName() + "\n";
+		qrCodeImage += "상영일자 : " + vo.getMovieDate() + "\n";
+		qrCodeImage += "상영시간 : " + vo.getMovieTime() + "\n";
+		qrCodeImage += "예매일자 : " + "20" + qrCodeName.substring(0,2) + "년, " + qrCodeName.substring(2,4) + "월, " + qrCodeName.substring(4,6) + "일\n";
+		qrCodeImage += "성인티켓 구매수 : " + vo.getMovieAdult() + "\n";
+		qrCodeImage += "소인티켓 구매수 : " + vo.getMovieChild() + "\n";
+		
+		projectProvide.qrCodeCreate(qrCodeName, qrCodeImage, "ticket");
+		
+		// DB에 예약정보 저장하기
+		vo.setPublishDate("20" + qrCodeName.substring(0,2) + "년, " + qrCodeName.substring(2,4) + "월, " + qrCodeName.substring(4,6) + "일\n");
+		vo.setQrCodeName(qrCodeName);
+		studyDao.setQrCodeCreate(vo);
+		
+		// 예약된 정보를 회원 메일로 전송처리한다.
+		
+		
+		return qrCodeName;
+	}
+
+	@Override
+	public QrCodeVo getQrCodeSearch(String qrCode) {
+		return studyDao.getQrCodeSearch(qrCode);
 	}
 
 	

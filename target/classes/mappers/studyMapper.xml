@@ -9,5 +9,13 @@
 	  </if>
 	</select>
 	
+	<select id="getQrCodeSearch" resultType="com.spring.JspringProject.vo.QrCodeVo">
+		select * from qrCode where qrCodeName = #{qrCode};
+	</select>
+	
+	<insert id="setQrCodeCreate">
+		insert into qrCode values(default, #{vo.mid}, #{vo.name}, #{vo.email}, #{vo.movieName}, #{vo.movieDate}, #{vo.movieTime}, #{vo.movieAdult}, #{vo.movieChild}, #{vo.publishDate}, #{vo.qrCodeName});
+	</insert>
+	
 	
 </mapper>
