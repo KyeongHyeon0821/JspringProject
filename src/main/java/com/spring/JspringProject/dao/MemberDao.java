@@ -30,4 +30,8 @@ public interface MemberDao {
 
 	void setMemberTodayCntClear(@Param("mid") String mid);
 
+	MemberVo getMemberNickNameEmailCheck(@Param("nickName") String nickName, @Param("email") String email);
+
+	void setKakaoMemberInput(@Param("mid") String mid, @Param("nickName") String nickName, @Param("email") String email, @Param("pwd") String pwd);
+
 }

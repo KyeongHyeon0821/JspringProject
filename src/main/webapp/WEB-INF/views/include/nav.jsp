@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 	'use strict';
 	
@@ -9,6 +10,16 @@
 		if(ans) {
 			ans = confirm("탈퇴후 1달간 같은 아이디로 재가입 할 수 없습니다.\n\n계속 진행하시겠습니까?");
 			if(ans) location.href="${ctp}/member/pwdCheck/d";
+		}
+	}
+	
+	window.Kakao.init("20a2d176f8b304aa238b8e166c7cbd99");
+	function kakaoLogout() {
+		const accessToken = Kakao.Auth.getAccessToken();
+		if(accessToken) {
+			Kakao.Auth.logout(function() {
+				window.location.href = "https://kauth.kakao.com/oauth/logout?client_id=20a2d176f8b304aa238b8e166c7cbd99&logout_redirect_uri=http://localhost:9090/JspringProject/member/memberLogout";
+			});
 		}
 	}
 </script>
@@ -21,7 +32,8 @@
 <div class="w3-top">
   <div class="w3-bar custom-light-pink w3-card">
     <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="http://192.168.50.57:9090/JspringProject" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <!-- <a href="http://192.168.50.57:9090/JspringProject" class="w3-bar-item w3-button w3-padding-large">HOME</a> -->
+    <a href="http://localhost:9090/JspringProject" class="w3-bar-item w3-button w3-padding-large">HOME</a>
     <a href="${ctp}/guest/guestList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Guest</a>
     
     <c:if test="${!empty sLevel}">
@@ -50,6 +62,10 @@
 	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">웹크롤링(jsoup)</a>
 	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">웹크롤링(selenium)</a>
 	        <a href="${ctp}/study/qrCode/qrCodeForm" class="w3-bar-item w3-button">QR Code</a>
+	        <a href="${ctp}/study/validator/validatorForm" class="w3-bar-item w3-button">BackEnd 체크</a>
+	        <a href="${ctp}/study/password/passwordForm" class="w3-bar-item w3-button">암호화 연습</a>
+	        <a href="${ctp}/study/transaction/transactionForm" class="w3-bar-item w3-button">트랜잭션 연습</a>
+	        <a href="${ctp}/study/payment/paymentForm" class="w3-bar-item w3-button">결재 연습</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">
@@ -64,7 +80,13 @@
 	        <c:if test="${sLevel == 0}"> <a href="${ctp}/admin/adminMain" class="w3-bar-item w3-button">관리자메뉴</a></c:if>
 	      </div>
 	    </div>
-    	<a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Logout</a>
+	    <div class="w3-dropdown-hover w3-hide-small">
+	      <button class="w3-padding-large w3-button" title="More" onclick="location.href='${ctp}/member/memberLogout'">Logout <i class="fa fa-caret-down"></i></button>     
+	      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+	        <a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button">일반 로그아웃</a>
+	        <a href="javascript:kakaoLogout()" class="w3-bar-item w3-button">카카오 로그아웃</a>
+	      </div>
+	    </div>
     </c:if>
     <c:if test="${empty sLevel}">
     	<a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Login</a>

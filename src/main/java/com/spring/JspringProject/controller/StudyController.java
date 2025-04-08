@@ -2,6 +2,7 @@ package com.spring.JspringProject.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -31,6 +33,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,11 +47,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.service.StudyService;
+import com.spring.JspringProject.service.UserService;
 import com.spring.JspringProject.vo.ChartVo;
 import com.spring.JspringProject.vo.CrawlingVo;
 import com.spring.JspringProject.vo.MailVo;
 import com.spring.JspringProject.vo.MemberVo;
 import com.spring.JspringProject.vo.QrCodeVo;
+import com.spring.JspringProject.vo.TransactionVo;
+import com.spring.JspringProject.vo.UserVo;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -63,6 +71,9 @@ public class StudyController {
 	
 	@Autowired
 	private JavaMailSender mailSender;
+	
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping("/ajax/ajaxForm")
 	public String ajaxFormGet() {
@@ -696,4 +707,43 @@ public class StudyController {
 		return studyService.getQrCodeSearch(qrCode);
 	}
 	
+	// BackEnd 체크(Validator 처리)
+	@RequestMapping(value = "/validator/validatorForm", method = RequestMethod.GET)
+	public String validatorFormGet(Model model) {
+		List<UserVo> vos = userService.getUserList();
+		model.addAttribute("vos", vos);
+		return "study/validator/validatorForm";
+	}
+	
+	// user 테이블에 user 아이디 중복체크
+	@ResponseBody
+	@RequestMapping(value = "/validator/userIdCheck", method = RequestMethod.POST, produces="application/text; charset=utf-8")
+	public String userIdCheckPost(String mid) {
+		UserVo vo = userService.getUserIdSearch(mid);
+		if(vo == null) return "사용 가능한 아이디 입니다.";
+		return "이미 사용중인 아이디 입니다.";
+	}
+	
+	
+	// BackEnd 체크(Validator 처리)
+	@RequestMapping(value = "/validator/validatorForm", method = RequestMethod.POST)
+	public String validatorFormPost(@Validated TransactionVo vo, BindingResult bindingResult) {
+		if(bindingResult.hasFieldErrors()) {
+			System.out.println("에러 내역 : " + bindingResult);
+			List<ObjectError> listError = bindingResult.getAllErrors();
+			String[] temp = null;
+			for(ObjectError list : listError) {
+				temp = list.getDefaultMessage().split("/");
+				System.out.println("메세지 : " + temp[0] +" : "  +temp[1]);
+				break;
+			}
+			return "redirect:/message/backEndCheckNo?tempFlag="+temp[1];
+		}
+		
+		int res = studyService.setTransactionUserInput(vo);
+		
+		if(res != 0) return "redirect:/message/transactionUserInputOk";
+		return "redirect:/message/transactionUserInputNo";
+	}
+
 }

@@ -17,5 +17,8 @@
 		insert into qrCode values(default, #{vo.mid}, #{vo.name}, #{vo.email}, #{vo.movieName}, #{vo.movieDate}, #{vo.movieTime}, #{vo.movieAdult}, #{vo.movieChild}, #{vo.publishDate}, #{vo.qrCodeName});
 	</insert>
 	
+	<insert id="setTransactionUserInput">
+		insert into user (mid, name, age, address, pwd) values (#{vo.mid},#{vo.name},#{vo.age},#{vo.address}, '1234');	
+	</insert>
 	
 </mapper>

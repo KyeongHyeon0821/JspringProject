@@ -6,20 +6,14 @@
 		select * from member where mid = #{mid};
 	</select>
 	
-	
-	
 	<select id="getMemberIdxSearch" resultType="com.spring.JspringProject.vo.MemberVo">
 		select * from member where idx = #{idx};
 	</select>
-	
-	
-	
 	
 	<select id="getMemberNickChcek" resultType="com.spring.JspringProject.vo.MemberVo">
 		select * from member where nickName = #{nickName};
 	</select>
 	
-	  
 	<select id="getMemberList" resultType="com.spring.JspringProject.vo.MemberVo">
 		<if test="level != 99">
 			select * from member where level = #{level} order by idx desc;
@@ -33,12 +27,19 @@
 		select count(*)from guest, member where member.name = #{name} and (guest.name = member.name or guest.name = member.nickName);
 	</select>
 	
-	
-	
+	<select id="getMemberNickNameEmailCheck" resultType="com.spring.JspringProject.vo.MemberVo">
+		select * from member where nickName = #{nickName} and email = #{email} limit 1;
+	</select>
 	
 	
 	<insert id="setMemberJoinOk">
 		insert into member values (default,#{vo.mid},#{vo.pwd},#{vo.nickName},#{vo.name},#{vo.gender},#{vo.birthday},#{vo.tel},#{vo.address},#{vo.email},#{vo.job},#{vo.hobby},#{vo.photo},#{vo.content},#{vo.userInfor} ,default,default,default,default,default,default,default)
+	</insert>
+	
+	
+	
+	<insert id="setKakaoMemberInput">
+		insert into member (mid, nickName, name, email, pwd, level) values (#{mid},#{nickName},#{nickName},#{email},#{pwd}, 2); 
 	</insert>
 
   

@@ -89,4 +89,14 @@ public class MemberServiceImpl implements MemberService {
 		memberDao.setMemberTodayCntClear(mid);
 	}
 
+	@Override
+	public MemberVo getMemberNickNameEmailCheck(String nickName, String email) {
+		return memberDao.getMemberNickNameEmailCheck(nickName, email);
+	}
+
+	@Override
+	public void setKakaoMemberInput(String mid, String nickName, String email, String pwd) {
+		memberDao.setKakaoMemberInput(mid, nickName, email, pwd);
+	}
+
 }

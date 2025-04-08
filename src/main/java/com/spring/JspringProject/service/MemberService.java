@@ -30,6 +30,10 @@ public interface MemberService {
 
 	void setMemberTodayCntClear(String mid);
 
+	MemberVo getMemberNickNameEmailCheck(String nickName, String email);
+
+	void setKakaoMemberInput(String mid, String nickName, String email, String pwd);
+
 
 
 }

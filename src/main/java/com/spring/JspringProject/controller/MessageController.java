@@ -21,7 +21,8 @@ public class MessageController {
 			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize,
 			@RequestParam(name="search", defaultValue = "", required = false) String search,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
-			@RequestParam(name="mSw", defaultValue = "1", required = false) String mSw
+			@RequestParam(name="mSw", defaultValue = "1", required = false) String mSw,
+			@RequestParam(name="tempFlag", defaultValue = "", required = false) String tempFlag
 		) {
 		
 		if(msgFlag.equals("userInputOk")) {
@@ -261,6 +262,25 @@ public class MessageController {
 			model.addAttribute("message", "휴지통 비우고 실패!");
 			model.addAttribute("url", "webMessage/webMessage?mSw="+5);
 		}
+		else if(msgFlag.equals("transactionUserInputOk")) {
+			model.addAttribute("message", "user 회원 저장 완료");
+			model.addAttribute("url", "study/validator/validatorForm");
+		}
+		else if(msgFlag.equals("transactionUserInputNo")) {
+			model.addAttribute("message", "user 회원 저장 실패!");
+			model.addAttribute("url", "study/validator/validatorForm");
+		}
+		else if(msgFlag.equals("backEndCheckNo")) {
+			String str = "";
+			if(tempFlag.equals("midSizeNo")) str = "아이디 길이를 확인하세요";
+			else if(tempFlag.equals("midEmpty")) str = "아이디를 입력해주세요";
+			else if(tempFlag.equals("nameEmpty")) str = "이름을 입력해주세요";
+			else if(tempFlag.equals("nameSizeNo")) str = "이름 길이를 확인해주세요";
+			else if(tempFlag.equals("ageRangeNo")) str = "나이 범위를 확인해주세요";
+			model.addAttribute("message", "저장 실패! " +str);
+			model.addAttribute("url", "study/validator/validatorForm");
+		}
+		
 		
 		
 		return "include/message";
