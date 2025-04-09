@@ -21,6 +21,7 @@ import com.spring.JspringProject.dao.StudyDao;
 import com.spring.JspringProject.vo.ChartVo;
 import com.spring.JspringProject.vo.QrCodeVo;
 import com.spring.JspringProject.vo.TransactionVo;
+import com.spring.JspringProject.vo.UserVo;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -361,6 +362,21 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public int setTransactionUserInput(TransactionVo vo) {
 		return studyDao.setTransactionUserInput(vo);
+	}
+
+	@Override
+	public int setTransactionUser1Input(UserVo vo) {
+		return studyDao.setTransactionUser1Input(vo);
+	}
+
+	@Override
+	public int setTransactionUser2Input(UserVo vo) {
+		return studyDao.setTransactionUser2Input(vo);
+	}
+
+	@Override
+	public int setTransactionUser3Input(TransactionVo vo) {
+		return studyDao.setTransactionUser3Input(vo);
 	}
 
 	

@@ -18,3 +18,10 @@ insert into user values (default, 'admin', '1234', '관리자', default, default
 
 select * from user;
 select * from user where mid like '%3%';
+
+
+create table user2 (
+	idx int not null auto_increment primary key,
+	mid varchar(20) not null,
+	job varchar(10) not null
+);

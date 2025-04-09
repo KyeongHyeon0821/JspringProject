@@ -66,6 +66,7 @@
 	        <a href="${ctp}/study/password/passwordForm" class="w3-bar-item w3-button">암호화 연습</a>
 	        <a href="${ctp}/study/transaction/transactionForm" class="w3-bar-item w3-button">트랜잭션 연습</a>
 	        <a href="${ctp}/study/payment/paymentForm" class="w3-bar-item w3-button">결재 연습</a>
+	        <a href="#" class="w3-bar-item w3-button">스케줄링처리</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">

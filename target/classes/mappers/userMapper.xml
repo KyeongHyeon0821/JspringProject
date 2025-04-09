@@ -14,6 +14,10 @@
     select * from user order by idx desc;
   </select>
   
+  <select id="getUser2List" resultType="userVo">
+    select * from user2 order by idx desc;
+  </select>
+  
   <select id="getSearchIdx" resultType="userVo">
     select * from user where idx = #{idx};
   </select>

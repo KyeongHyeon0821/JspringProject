@@ -19,4 +19,8 @@ public class UserVo {
 	private String nickName;
 	private String part;
 	private String content;
+	
+	
+	// user2 테이블
+	private String job;
 }

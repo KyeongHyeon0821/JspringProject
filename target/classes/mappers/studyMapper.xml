@@ -21,4 +21,19 @@
 		insert into user (mid, name, age, address, pwd) values (#{vo.mid},#{vo.name},#{vo.age},#{vo.address}, '1234');	
 	</insert>
 	
+	<insert id="setTransactionUser1Input">
+		insert into user (mid, name, age, address, pwd) values (#{vo.mid},#{vo.name},#{vo.age},#{vo.address}, '1234');	
+	</insert>
+	
+	<insert id="setTransactionUser2Input">
+		insert into user2 values (default, #{vo.mid},#{vo.job});	
+	</insert>
+	
+	<insert id="setTransactionUser3Input">
+		insert into user (mid, name, age, address, pwd) values (#{vo.mid},#{vo.name},#{vo.age},#{vo.address}, '1234');	
+		insert into user2 values (default, #{vo.mid},#{vo.job});	
+	</insert>
+	
+	
+	
 </mapper>

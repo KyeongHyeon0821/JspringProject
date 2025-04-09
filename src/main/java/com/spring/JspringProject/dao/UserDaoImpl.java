@@ -54,5 +54,9 @@ public class UserDaoImpl implements UserDao {
 		return sqlSession.selectOne("userNS.getUserCnt");
 	}
 
+	public List<UserVo> getUser2List() {
+		return sqlSession.selectList("userNS.getUser2List");
+	}
+
 	
 }

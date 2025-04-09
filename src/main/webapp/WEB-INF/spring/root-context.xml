@@ -10,7 +10,8 @@
 	<!-- Datasource를 Bean등록/설정(DB연동을 위한 환경설정) -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/springproject" />
+		<property name="url" value="jdbc:mysql://localhost:3306/springproject?allowMultiQueries=true" />
+		<!-- <property name="url" value="jdbc:mysql://localhost:3306/springproject" /> -->
 		<property name="username" value="root" />
 		<property name="password" value="1234" />
 	</bean>
@@ -29,6 +30,13 @@
 
 	<mybatis-spring:scan base-package="com.spring.JspringProject.dao"/>
 	
+		
+	<!-- Transaction(트랜잭션) 라이브러리 Bean 등록 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	
 	<!-- 메일처리를 위한 라이브러리를 Bean으로 등록 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
@@ -45,6 +53,7 @@
 			</props>
 		</property>
 	</bean>
+
 	
 	
 </beans>

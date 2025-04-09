@@ -28,5 +28,8 @@ public class TransactionVo {
 	@Range(min=10, max=99, message="나이 범위를 벗어납니다./ageRangeNo")
 	private int age;
 	
+	@Size(min=2, max=10, message="길이가 잘못되었습니다./jobSizeNo")
+	private String job;
+	
 	private String address;
 }

@@ -53,6 +53,11 @@ public class UserServiceImpl implements UserService {
 	public int getUserCnt() {
 		return userDao.getUserCnt();
 	}
+
+	@Override
+	public List<UserVo> getUser2List() {
+		return userDao.getUser2List();
+	}
 	
 	
 }

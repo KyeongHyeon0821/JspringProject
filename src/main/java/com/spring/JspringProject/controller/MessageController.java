@@ -271,14 +271,20 @@ public class MessageController {
 			model.addAttribute("url", "study/validator/validatorForm");
 		}
 		else if(msgFlag.equals("backEndCheckNo")) {
-			String str = "";
-			if(tempFlag.equals("midSizeNo")) str = "아이디 길이를 확인하세요";
-			else if(tempFlag.equals("midEmpty")) str = "아이디를 입력해주세요";
-			else if(tempFlag.equals("nameEmpty")) str = "이름을 입력해주세요";
-			else if(tempFlag.equals("nameSizeNo")) str = "이름 길이를 확인해주세요";
-			else if(tempFlag.equals("ageRangeNo")) str = "나이 범위를 확인해주세요";
-			model.addAttribute("message", "저장 실패! " +str);
-			model.addAttribute("url", "study/validator/validatorForm");
+		model.addAttribute("message", "저장실패("+tempFlag+")-BackEndCheck");
+		model.addAttribute("url", "study/validator/validatorForm");
+		}
+		else if(msgFlag.equals("transactionUserInputOk")) {
+			model.addAttribute("message", "user테이블에 회원이 등록되었습니다.");
+			model.addAttribute("url", "study/transaction/transactionForm");
+		}
+		else if(msgFlag.equals("transactionUserInputNo")) {
+			model.addAttribute("message", "user테이블 회원 등록 실패!!");
+			model.addAttribute("url", "study/transaction/transactionForm");
+		}
+		else if(msgFlag.equals("transacTionbackEndCheckNo")) {
+			model.addAttribute("message", "user/user2테이블 회원 등록 실패!!");
+			model.addAttribute("url", "study/transaction/transactionForm");
 		}
 		
 		
