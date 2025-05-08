@@ -1,13 +1,22 @@
 package com.spring.JspringProject.common;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -25,6 +34,12 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 @Service
 public class ProjectProvide {
+	
+	//구글 리캡차를 위한 처리
+	public static final String url = "https://www.google.com/recaptcha/api/siteverify";
+	private final static String USER_AGENT = "Mozilla/5.0";
+	private static String secret = "";
+
 
 	//파일 저장하는 메소드 (업로드 파일명, 저장 파일명, 저장경로)
 	public void writeFile(MultipartFile fName, String sFileName, String urlPath) throws IOException {
@@ -92,5 +107,49 @@ public class ProjectProvide {
 		}
 	}
 
+	public static boolean verify(String gRecaptchaResponse) throws IOException {
+    if (gRecaptchaResponse == null || "".equals(gRecaptchaResponse)) return false;
+    
+    try {
+	    URL obj = new URL(url);
+	    HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+	
+	    conn.setRequestMethod("POST");
+	    conn.setRequestProperty("User-Agent", USER_AGENT);
+	    conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+	
+	    String postParams = "secret=" + secret + "&response=" + gRecaptchaResponse;
+	
+	    conn.setDoOutput(true);
+	    DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+	    dos.writeBytes(postParams);
+	    dos.flush();
+	    dos.close();
+	
+	    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	    String inputLine;
+	    StringBuffer stringBuffer = new StringBuffer();
+	
+	    while ((inputLine = bufferedReader.readLine()) != null) {
+	    	stringBuffer.append(inputLine);
+	    }
+	    bufferedReader.close();
+	     
+	    JsonReader jsonReader = Json.createReader(new StringReader(stringBuffer.toString()));
+	    JsonObject jsonObject = jsonReader.readObject();
+	    jsonReader.close();
+	     
+	    return jsonObject.getBoolean("success");
+    } catch(Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+	 public static void setSecretKey(String key){
+     secret = key;
+	 }
+	
+	
 	
 }

@@ -43,5 +43,7 @@ public interface StudyService {
 
 	int setTransactionUser3Input(TransactionVo vo);
 
+	String setThumbnailCreate(MultipartFile file);
+
 
 }

@@ -1,5 +1,6 @@
 package com.spring.JspringProject.service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import com.spring.JspringProject.vo.ChartVo;
 import com.spring.JspringProject.vo.QrCodeVo;
 import com.spring.JspringProject.vo.TransactionVo;
 import com.spring.JspringProject.vo.UserVo;
+
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -377,6 +380,34 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public int setTransactionUser3Input(TransactionVo vo) {
 		return studyDao.setTransactionUser3Input(vo);
+	}
+
+	@Override
+	public String setThumbnailCreate(MultipartFile file) {
+		String res = "";
+		try {
+			String sFileName = projectProvide.newNameCreate(2) + "_" + file.getOriginalFilename();
+			
+			// 썸네일 파일이 저장될 경로설정
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+			String realPath = request.getSession().getServletContext().getRealPath("/resources/data/thumbnail/");
+			File realFileName = new File(realPath + sFileName);
+			file.transferTo(realFileName);
+			
+			// 썸메일 이미지 생성 저장하기
+			String thumbnailSaveName = realPath + "s_" + sFileName;
+			File thumbnailFile = new File(thumbnailSaveName);
+			
+			int width = 160;
+			int height = 120;
+			Thumbnailator.createThumbnail(realFileName, thumbnailFile, width, height);
+			
+			res = sFileName;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
 	}
 
 	

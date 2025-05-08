@@ -50,6 +50,7 @@
 	        <a href="${ctp}/study/modal/modalForm" class="w3-bar-item w3-button">모달 연습</a>
 	        <a href="${ctp}/study/calendar" class="w3-bar-item w3-button">인터넷 달력</a>
 	        <a href="${ctp}/errorPage/errorMain" class="w3-bar-item w3-button">Error 연습</a>
+	        <a href="${ctp}/study/captchaGoogle/captchaGoogle" class="w3-bar-item w3-button">구글 리캡차연습</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">

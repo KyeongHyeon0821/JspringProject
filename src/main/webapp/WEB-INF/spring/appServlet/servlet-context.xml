@@ -28,6 +28,7 @@
 	<resources mapping="/pds/**" location="/resources/data/pds/" />
 	<resources mapping="/qrCode/**" location="/resources/data/qrCode/" />
 	<resources mapping="/ticket/**" location="/resources/data/ticket/" />
+	<resources mapping="/thumbnail/**" location="/resources/data/thumbnail/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -51,6 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.JspringProject.common.ARIAUtil;
+import com.spring.JspringProject.common.ProjectProvide;
 import com.spring.JspringProject.common.SecurityUtil;
 import com.spring.JspringProject.service.MemberService;
 import com.spring.JspringProject.service.StudyService;
@@ -861,6 +862,42 @@ public class StudyController {
 		session.removeAttribute("sDbPayMentVo");
 		return  "study/payment/paymentOk";
 	}
+	
+	//썸네일 연습 폼보기
+	@RequestMapping(value = "/thumbnail/thumbnailForm", method = RequestMethod.GET)
+	public String thumbnailFormGet() {
+		return "study/thumbnail/thumbnailForm";
+	}
+	
+	// 썸네일 연습 사진처리
+	@ResponseBody
+	@RequestMapping(value = "/thumbnail/thumbnailForm", method = RequestMethod.POST)
+	public String thumbnailFormPost(MultipartFile file) {
+		return studyService.setThumbnailCreate(file);
+	}
+	
+	// 구글 리캡차 연습폼 보기
+	@GetMapping("/captchaGoogle/captchaGoogle")
+	public String captchaGoogleGet() {
+		return "study/captchaGoogle/captchaGoogle";
+	}
+	
+	// 구글 리캡차 연습 처리
+	@ResponseBody
+	@PostMapping("/captchaGoogle/captchaGoogleCheck")
+	public int captchaGooglePost(HttpServletRequest request) {
+		// 시크릿 키를 리캡챠를 받아올수 있는 Class에 보내서 그곳에서 값을 출력한다
+    ProjectProvide.setSecretKey("6Lf5ijErAAAAAPR2sX0J-Aih99RoHb7I9QJT_pgc");	// 시크릿키
+    String gRecaptchaResponse = request.getParameter("recaptcha");
+    try {
+       if(ProjectProvide.verify(gRecaptchaResponse)) return 0; // 성공
+       else return 1; // 실패
+    } catch (Exception e) {
+        e.printStackTrace();
+        return -1; //에러
+    }
+	}
+	
 	
 	
 }
